@@ -1,0 +1,63 @@
+/* ============================================================
+   app.css – Vital Trackers global styles
+   Uses Tailwind CSS directives + custom base overrides.
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base overrides ───────────────────────────────────────── */
+@layer base {
+    /* Import Inter font from Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    html {
+        font-family: 'Inter', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Remove DataTables default border */
+    table.dataTable {
+        border-collapse: collapse !important;
+    }
+
+    /* Smooth scrolling across the app */
+    * {
+        scroll-behavior: smooth;
+    }
+}
+
+/* ── Component layer: reusable UI patterns ───────────────── */
+@layer components {
+
+    /* Primary action button */
+    .btn-primary {
+        @apply inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700
+               text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-200
+               transition-all duration-150 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed;
+    }
+
+    /* Secondary / outline button */
+    .btn-secondary {
+        @apply inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200
+               text-gray-600 hover:bg-gray-50 text-sm font-semibold rounded-xl
+               transition-all duration-150 active:scale-95;
+    }
+
+    /* Stat summary card */
+    .stat-card {
+        @apply bg-white rounded-2xl border border-gray-100 p-5 flex items-center justify-between shadow-sm;
+    }
+
+    /* Stat icon wrapper */
+    .stat-icon {
+        @apply w-12 h-12 rounded-xl flex items-center justify-center;
+    }
+}
+
+/* ── Utility overrides ────────────────────────────────────── */
+@layer utilities {
+    /* Hide x-cloak elements until Alpine.js initialises */
+    [x-cloak] { display: none !important; }
+}

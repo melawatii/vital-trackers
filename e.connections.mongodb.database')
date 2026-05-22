@@ -1,0 +1,61 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8207
+    [34mall[39m: [
+      [34;4mApp\Models\User[39;24m {#8208
+        [34mname[39m: [32m"[39m[32mMelawati[39m[32m"[39m,
+        [34memail[39m: [32m"[39m[32mmelawatii@hotmail.com[39m[32m"[39m,
+        #[33mpassword[39m: [32m"[39m\$[32m2y[39m\$[32m12[39m\$[32m98D0TF8Asc.Hspz791YKK..Zfic9S/ITwYNWPvs4QCYBH8C7LSCyS[39m[32m"[39m,
+        [34mrole[39m: [32m"[39m[32muser[39m[32m"[39m,
+        [34mcreated_time[39m: [34;4mIlluminate\Support\Carbon @1779021557[39;24m {#8190
+          [34mdate[39m: [36m2026-05-17 12:39:17.052 UTC (+00:00)[39m,
+        },
+        [34muuid[39m: [32m"[39m[32m01KRTZ5B9VMRYTE9J6ACG8GHCJ[39m[32m"[39m,
+        [34mupdated_at[39m: [34;4mIlluminate\Support\Carbon @1779021557[39;24m {#8188
+          [34mdate[39m: [36m2026-05-17 12:39:17.052 UTC (+00:00)[39m,
+        },
+        [34mcreated_at[39m: [34;4mIlluminate\Support\Carbon @1779021557[39;24m {#8206
+          [34mdate[39m: [36m2026-05-17 12:39:17.052 UTC (+00:00)[39m,
+        },
+        [34mid[39m: [34;4mMongoDB\BSON\ObjectId[39;24m {#8189
+          +"[1moid[22m": [32m"[39m[32m6a09b6f5b51dc21a4e09f252[39m[32m"[39m,
+        },
+      },
+      [34;4mApp\Models\User[39;24m {#8209
+        [34mname[39m: [32m"[39m[32mMelawati[39m[32m"[39m,
+        [34memail[39m: [32m"[39m[32mmellawati16016@gmail.com[39m[32m"[39m,
+        #[33mpassword[39m: [32m"[39m\$[32m2y[39m\$[32m12[39m\$[32m2s0fcjPURDdUwLgZvNLu4u3nekVE5IJPI8jnCKNcPwKtDKt4R.K2q[39m[32m"[39m,
+        [34mrole[39m: [32m"[39m[32muser[39m[32m"[39m,
+        [34mcreated_time[39m: [34;4mIlluminate\Support\Carbon @1779021650[39;24m {#8193
+          [34mdate[39m: [36m2026-05-17 12:40:50.105 UTC (+00:00)[39m,
+        },
+        [34muuid[39m: [32m"[39m[32m01KRTZ865SZ6F2W4SS58ZKHSWF[39m[32m"[39m,
+        [34mupdated_at[39m: [34;4mIlluminate\Support\Carbon @1779021650[39;24m {#8192
+          [34mdate[39m: [36m2026-05-17 12:40:50.105 UTC (+00:00)[39m,
+        },
+        [34mcreated_at[39m: [34;4mIlluminate\Support\Carbon @1779021650[39;24m {#8191
+          [34mdate[39m: [36m2026-05-17 12:40:50.105 UTC (+00:00)[39m,
+        },
+        [34mid[39m: [34;4mMongoDB\BSON\ObjectId[39;24m {#8196
+          +"[1moid[22m": [32m"[39m[32m6a09b752b51dc21a4e09f253[39m[32m"[39m,
+        },
+      },
+      [34;4mApp\Models\User[39;24m {#8210
+        [34mname[39m: [32m"[39m[32mTest[39m[32m"[39m,
+        [34memail[39m: [32m"[39m[32mtest@mail.com[39m[32m"[39m,
+        #[33mpassword[39m: [32m"[39m\$[32m2y[39m\$[32m12[39m\$[32mk4o0gWS0Gw5C2MMHG4cvJ.8f.jL1GvehWovapHItn4b/dKXYkR026[39m[32m"[39m,
+        [34mrole[39m: [32m"[39m[32muser[39m[32m"[39m,
+        [34muuid[39m: [32m"[39m[32m01KRTZEP25017D3YB3K2A72SVK[39m[32m"[39m,
+        [34mcreated_time[39m: [34;4mIlluminate\Support\Carbon @1779021862[39;24m {#8198
+          [34mdate[39m: [36m2026-05-17 12:44:22.981 UTC (+00:00)[39m,
+        },
+        [34mupdated_at[39m: [34;4mIlluminate\Support\Carbon @1779021862[39;24m {#8197
+          [34mdate[39m: [36m2026-05-17 12:44:22.981 UTC (+00:00)[39m,
+        },
+        [34mcreated_at[39m: [34;4mIlluminate\Support\Carbon @1779021862[39;24m {#8194
+          [34mdate[39m: [36m2026-05-17 12:44:22.981 UTC (+00:00)[39m,
+        },
+        [34mid[39m: [34;4mMongoDB\BSON\ObjectId[39;24m {#8201
+          +"[1moid[22m": [32m"[39m[32m6a09b82674902430020c3902[39m[32m"[39m,
+        },
+      },
+    ],
+  }
