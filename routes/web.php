@@ -1,7 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VitalCategoryController;
+use App\Http\Controllers\VitalRecordController;
+use App\Http\Controllers\VitalTypeController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +19,26 @@ use App\Http\Controllers\VitalCategoryController;
  */
 
 Route::middleware(['auth'])->group(function () {
+
+    // Server-side DataTable endpoint (must be before resource)
+    Route::get('vital-categories/datatable', [VitalCategoryController::class, 'datatable'])
+        ->name('vital-categories.datatable');
+
+    Route::resource('vital-categories', VitalCategoryController::class);
+
+
+
+
+
     Route::redirect('/', '/dashboard');
 
-    // Server-side DataTable data endpoint (must be before resource to avoid conflict)
-    Route::get('vital-categories/data', [VitalCategoryController::class, 'data'])
-        ->name('vital-categories.data');
+    Route::get('/dashboard', function () {
+        return view('dashboard.index');
+    })->name('dashboard');
 
-    // Full CRUD resource routes
-    Route::resource('vital-categories', VitalCategoryController::class);
+    Route::resource('vital-types', VitalTypeController::class);
+
+    Route::resource('vital-records', VitalRecordController::class);
 });
 
 /**
