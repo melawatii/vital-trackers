@@ -2,64 +2,60 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
 
 class VitalType extends Model
 {
-    use HasFactory;
-
     protected $connection = 'mongodb';
     protected $collection = 'vital_types';
 
+    /** Mass assignable attributes */
     protected $fillable = [
         'name',
+        'slug',
         'category_id',
-        'unit',
         'input_type',
+        'unit',
         'min_value',
         'max_value',
         'normal_range_min',
         'normal_range_max',
-        'status', // should hold 'active' or 'inactive'
         'sort_order',
         'note',
+        'status',
         'created_by',
     ];
 
-    /**
-     * Cast status to string
-     */
-    protected $casts = [
-        'status' => 'string',
-    ];
-
-    /**
-     * Scope to filter only active types
-     */
+    /** Scope: active vital types only */
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
     }
 
-    /**
-     * Check if type is active
-     */
-    public function getIsActiveAttribute(): bool
+    /** Scope: inactive vital types only */
+    public function scopeInactive($query)
     {
-        return $this->status === 'active';
+        return $query->where('status', 'inactive');
     }
 
-    /**
-     * Relationships
-     */
+    /** Scope: numeric input types only */
+    public function scopeNumeric($query)
+    {
+        return $query->where('input_type', 'number');
+    }
+
+    /** Relationship: belongs to a VitalCategory */
     public function category()
     {
         return $this->belongsTo(VitalCategory::class, 'category_id');
     }
 
-    public function creator()
+    /** Get formatted normal range string e.g. "40 - 120" */
+    public function getNormalRangeAttribute(): string
     {
-        return $this->belongsTo(User::class, 'created_by');
+        if ($this->normal_range_min !== null && $this->normal_range_max !== null) {
+            return $this->normal_range_min . ' - ' . $this->normal_range_max;
+        }
+        return '-';
     }
 }

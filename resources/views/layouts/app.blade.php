@@ -11,19 +11,143 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
 
-    <!-- SweetAlert2 -->
+    <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        /* ── DataTable resets ─────────────────────────────── */
+        /* ── Sidebar links ────────────────────────────────── */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+            text-decoration: none;
+            transition: all .15s;
+            width: 100%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+        }
+        .sidebar-link:hover { background: #eff6ff; color: #2563eb; }
+        .sidebar-link.active { background: #eff6ff; color: #2563eb; }
+        .sidebar-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            padding: 20px 12px 6px;
+            display: block;
+        }
+
+        /* ── Form fields ──────────────────────────────────── */
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+        .form-hint  { font-size: 0.75rem; color: #9ca3af; margin-top: 4px; }
+        .form-error { font-size: 0.75rem; color: #ef4444; margin-top: 4px; }
+        .form-input {
+            width: 100%;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            color: #1f2937;
+            background: #fff;
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .form-input::placeholder { color: #d1d5db; }
+        .form-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+        .form-input.is-error { border-color: #f87171; }
+        .form-input.is-error:focus { box-shadow: 0 0 0 3px rgba(248,113,113,.15); }
+
+        /* ── Icon picker ──────────────────────────────────── */
+        .icon-box {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color .15s, box-shadow .15s;
+            user-select: none;
+        }
+        .icon-box:hover { border-color: #93c5fd; box-shadow: 0 2px 8px rgba(59,130,246,.12); }
+        .icon-box.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 2px 12px rgba(59,130,246,.2);
+        }
+        .icon-check {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+        .icon-box.selected .icon-check { opacity: 1; }
+
+        /* ── Status radio cards ───────────────────────────── */
+        .status-card {
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid #f1f5f9;
+            cursor: pointer;
+            transition: border-color .15s, background .15s;
+        }
+        .status-card:hover { border-color: #bfdbfe; }
+        .status-card.selected { border-color: #3b82f6; background: rgba(239,246,255,.5); }
+        .radio-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all .15s;
+        }
+        .radio-dot.checked { border-color: #2563eb; background: #2563eb; }
+        .radio-dot-inner {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            opacity: 0;
+            transition: opacity .15s;
+        }
+        .radio-dot.checked .radio-dot-inner { opacity: 1; }
+
+        /* ── DataTable overrides ──────────────────────────── */
         table.dataTable { border-collapse: collapse !important; width: 100% !important; }
         table.dataTable thead th {
             background: #f8fafc;
@@ -31,7 +155,7 @@
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: .06em;
             padding: 13px 16px;
             border-bottom: 1px solid #f1f5f9 !important;
             white-space: nowrap;
@@ -45,18 +169,11 @@
         }
         table.dataTable tbody tr:last-child td { border-bottom: none; }
         table.dataTable tbody tr:hover td { background: #f9fafb; }
-        #dt-wrapper .dataTables_processing {
-            background: rgba(255,255,255,.9);
-            border: none;
-            box-shadow: none;
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
 
         /* ── Page loading overlay ─────────────────────────── */
         #page-loading {
             position: fixed; inset: 0;
-            background: rgba(255,255,255,.8);
+            background: rgba(255,255,255,.85);
             backdrop-filter: blur(3px);
             z-index: 9999;
             display: flex;
@@ -64,49 +181,14 @@
             justify-content: center;
             transition: opacity .3s;
         }
-        #page-loading.hidden { opacity: 0; pointer-events: none; }
         .spin {
             width: 34px; height: 34px;
             border: 3px solid #dbeafe;
             border-top-color: #3b82f6;
             border-radius: 50%;
-            animation: spin .6s linear infinite;
+            animation: spin .65s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── Sidebar ──────────────────────────────────────── */
-        .sidebar-link { @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-all duration-150; }
-        .sidebar-link.active { @apply bg-blue-50 text-blue-600; }
-        .sidebar-section-label { @apply text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-3 mb-1 mt-5; }
-
-        /* ── Form utilities ───────────────────────────────── */
-        .form-label  { @apply block text-sm font-semibold text-gray-700 mb-1.5; }
-        .form-hint   { @apply text-xs text-gray-400 mt-1; }
-        .form-error  { @apply text-xs text-red-500 mt-1; }
-        .form-input  {
-            @apply w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 bg-white
-                   placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
-        }
-        .form-input--error { @apply border-red-400 focus:ring-red-400; }
-
-        /* ── Icon picker ──────────────────────────────────── */
-        .icon-option__box {
-            @apply relative w-16 h-16 rounded-2xl flex items-center justify-center
-                   border-2 border-transparent transition-all duration-150
-                   hover:border-blue-300 hover:shadow-md cursor-pointer;
-        }
-        .icon-option__box--selected { @apply border-blue-500 shadow-md shadow-blue-100; }
-        .icon-option__check {
-            @apply absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-600 rounded-full
-                   flex items-center justify-center transition-opacity;
-        }
-
-        /* ── Status option ────────────────────────────────── */
-        .status-option__box {
-            @apply p-4 rounded-xl border-2 border-gray-100
-                   hover:border-blue-200 transition-all duration-150 cursor-pointer;
-        }
-        .status-option__box--selected { @apply border-blue-500 bg-blue-50/40; }
     </style>
 </head>
 <!-- End: Head -->
@@ -116,9 +198,9 @@
 
     <!-- Begin: Page Loading Overlay -->
     <div id="page-loading">
-        <div class="flex flex-col items-center gap-3">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
             <div class="spin"></div>
-            <p class="text-xs text-slate-400 font-medium tracking-wide">Loading…</p>
+            <p style="font-size:.75rem;color:#94a3b8;font-weight:500">Loading…</p>
         </div>
     </div>
     <!-- End: Page Loading Overlay -->
@@ -138,12 +220,11 @@
             <!-- End: Navbar -->
 
             <!-- Begin: Main Content -->
-            <main class="flex-1 overflow-y-auto p-6 space-y-6">
+            <main class="flex-1 overflow-y-auto p-6 space-y-5">
 
                 <!-- Begin: Flash Alert Success -->
                 @if(session('success'))
-                    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-                         class="flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700">
+                    <div class="flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
@@ -183,22 +264,17 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Alpine.js (flash message transitions) -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <script>
         // Hide page loading overlay once DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById('page-loading');
-            el.classList.add('hidden');
-            setTimeout(() => el.remove(), 350);
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 300);
         });
     </script>
 

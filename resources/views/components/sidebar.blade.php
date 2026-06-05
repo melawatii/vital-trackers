@@ -58,19 +58,6 @@
         </a>
         <!-- End: Nav Item Vital Records -->
 
-        <!-- Begin: Nav Item Add New Record -->
-        <a href="{{ url('/vital-records/create') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 mb-0.5
-                {{ request()->is('vital-records/create') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}">
-            {{-- Plus-circle icon --}}
-            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Add New Record</span>
-        </a>
-        <!-- End: Nav Item Add New Record -->
-
         <!-- Begin: Nav Item Import Data -->
         <a href="{{ url('/import') }}"
             class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 mb-0.5

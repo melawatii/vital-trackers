@@ -4,7 +4,7 @@
 {{-- ============================================================ --}}
 
 <!-- Begin: Table Row Actions -->
-<div class="flex items-center justify-end gap-2 pr-1">
+<div class="flex items-center justify-start gap-2 pr-1">
 
     {{-- Edit button --}}
     <a href="{{ $editUrl }}"

@@ -20,14 +20,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
 
-    // Server-side DataTable endpoint (must be before resource)
-    Route::get('vital-categories/datatable', [VitalCategoryController::class, 'datatable'])
-        ->name('vital-categories.datatable');
-
+    // Vital Categories routes
+    Route::get('vital-categories/datatable', [VitalCategoryController::class, 'datatable'])->name('vital-categories.datatable');
     Route::resource('vital-categories', VitalCategoryController::class);
 
-
-
+    // Vital Types routes
+    Route::get('vital-types/datatable', [App\Http\Controllers\VitalTypeController::class, 'datatable'])->name('vital-types.datatable');
+    Route::resource('vital-types', VitalTypeController::class);
 
 
     Route::redirect('/', '/dashboard');
@@ -35,8 +34,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard.index');
     })->name('dashboard');
-
-    Route::resource('vital-types', VitalTypeController::class);
 
     Route::resource('vital-records', VitalRecordController::class);
 });
