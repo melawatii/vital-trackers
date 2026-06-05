@@ -217,18 +217,6 @@
             </svg>
         </div>
         <!-- End: Stay Healthy Card Character -->
-
-        <!-- Begin: Stay Healthy Card Heart Badge -->
-        {{-- Small white heart icon badge in bottom-left --}}
-        <div class="absolute bottom-3 left-4 z-10">
-            <div class="w-7 h-7 bg-white rounded-lg shadow-sm flex items-center justify-center">
-                <svg class="w-[15px] h-[15px] text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-            </div>
-        </div>
-        <!-- End: Stay Healthy Card Heart Badge -->
-
     </div>
     <!-- End: Stay Healthy Card -->
 
