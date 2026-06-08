@@ -6,20 +6,33 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVitalRecordRequest extends FormRequest
 {
-    public function authorize() { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
-    public function rules()
+    /** Validation rules for updating a vital record */
+    public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,_id',
-            'category_id' => 'required|exists:vital_categories,_id',
-            'vital_type_id' => 'required|exists:vital_types,_id',
-            'vital_name' => 'required|string|max:255',
-            'unit' => 'required|string|max:50',
-            'value' => 'required|numeric',
-            'status' => 'required|in:normal,high,low',
-            'note' => 'nullable|string',
-            'measured_at' => 'required|date',
+            'type_id'     => ['required', 'string'],
+            'category_id' => ['required', 'string'],
+            'value'       => ['required', 'numeric'],
+            'unit'        => ['required', 'string', 'max:20'],
+            'status'      => ['required', 'in:normal,high_low'],
+            'note'        => ['nullable', 'string', 'max:500'],
+            'recorded_at' => ['required', 'date'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'type_id.required'     => 'Please select a vital type.',
+            'category_id.required' => 'Please select a category.',
+            'value.required'       => 'Measurement value is required.',
+            'value.numeric'        => 'Measurement value must be a number.',
+            'recorded_at.required' => 'Date and time is required.',
         ];
     }
 }

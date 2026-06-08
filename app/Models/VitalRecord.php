@@ -2,57 +2,63 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VitalRecord extends Model
 {
-    use HasFactory;
-
     protected $connection = 'mongodb';
     protected $collection = 'vital_records';
 
+    /** Mass assignable attributes */
     protected $fillable = [
         'user_id',
         'category_id',
-        'vital_type_id',
-        'vital_name',
-        'unit',
+        'type_id',
         'value',
+        'unit',
         'status',
         'note',
-        'measured_at',
-        'created_by',
+        'recorded_at',
     ];
 
+    /** Cast recorded_at as datetime */
     protected $casts = [
-        'measured_at' => 'datetime',
+        'recorded_at' => 'datetime',
     ];
 
-    // ──────────────────────────────
-    // Relationships
-    // ──────────────────────────────
-    public function user(): BelongsTo
+    /** Scope: normal status records */
+    public function scopeNormal($query)
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $query->where('status', 'normal');
     }
 
-    public function category(): BelongsTo
+    /** Scope: high/low (danger) status records */
+    public function scopeDanger($query)
+    {
+        return $query->where('status', 'high_low');
+    }
+
+    /** Scope: records created this month */
+    public function scopeThisMonth($query)
+    {
+        return $query->where('recorded_at', '>=', now()->startOfMonth());
+    }
+
+    /** Relationship: belongs to a User */
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    /** Relationship: belongs to a VitalCategory */
+    public function category()
     {
         return $this->belongsTo(VitalCategory::class, 'category_id');
     }
 
-    public function type(): BelongsTo
+    /** Relationship: belongs to a VitalType */
+    public function vitalType()
     {
-        return $this->belongsTo(VitalType::class, 'vital_type_id');
-    }
-
-    // ──────────────────────────────
-    // Accessors
-    // ──────────────────────────────
-    public function getIsNormalAttribute(): bool
-    {
-        return $this->status === 'normal';
+        return $this->belongsTo(VitalType::class, 'type_id');
     }
 }
