@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VitalCategoryController;
 use App\Http\Controllers\VitalRecordController;
 use App\Http\Controllers\VitalTypeController;
@@ -29,13 +30,18 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('vital-categories', VitalCategoryController::class);
 
     // Vital Types routes
-    Route::get('vital-types/datatable', [App\Http\Controllers\VitalTypeController::class, 'datatable'])->name('vital-types.datatable');
+    Route::get('vital-types/datatable', [VitalTypeController::class, 'datatable'])->name('vital-types.datatable');
     Route::resource('vital-types', VitalTypeController::class);
 
     // Vital Records routes
-    Route::get('vital-records/datatable',       [App\Http\Controllers\VitalRecordController::class, 'datatable'])->name('vital-records.datatable');
-    Route::get('vital-records/types-by-category', [App\Http\Controllers\VitalRecordController::class, 'typesByCategory'])->name('vital-records.types-by-category');
-    Route::resource('vital-records', App\Http\Controllers\VitalRecordController::class);
+    Route::get('vital-records/datatable', [VitalRecordController::class, 'datatable'])->name('vital-records.datatable');
+    Route::get('vital-records/types-by-category', [VitalRecordController::class, 'typesByCategory'])->name('vital-records.types-by-category');
+    Route::resource('vital-records', VitalRecordController::class);
+
+    // Users routes
+    Route::get('users/datatable', [UserController::class, 'datatable'])->name('users.datatable');
+    Route::resource('users', UserController::class);
+
 
 });
 

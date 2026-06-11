@@ -32,7 +32,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'phone',
+        'status',
         'email_verified_at',
+        'last_login_at',
         'created_by',
         'created_time',
     ];
@@ -56,7 +59,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'last_login_at'     => 'datetime',
+            'password'          => 'hashed',
         ];
     }
 
@@ -75,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail
             // Default role
             if (! $user->role) {
                 $user->role = 'user';
+            }
+
+            // Default status
+            if (! $user->status) {
+                $user->status = 'active';
             }
 
             // Set created timestamp
@@ -111,25 +120,44 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function vitalRecords()
     {
-        return $this->hasMany(
-            VitalRecord::class,
-            'user_id'
-        );
+        return $this->hasMany(VitalRecord::class, 'user_id');
     }
 
-    /**
-     * Check admin role.
-     */
+    // ─── Scopes ──────────────────────────────────────────────────────────────
+
+    /** Filter active users only */
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /** Filter by role */
+    public function scopeRole($query, string $role)
+    {
+        return $query->where('role', $role);
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    /** Check admin role */
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Check normal user role.
-     */
+    /** Check normal user role */
     public function isUser(): bool
     {
         return $this->role === 'user';
+    }
+
+    /** Get human-readable role label */
+    public function getRoleLabelAttribute(): string
+    {
+        return match($this->role) {
+            'admin' => 'Administrator',
+            'user'  => 'User',
+            default => ucfirst($this->role ?? 'User'),
+        };
     }
 }
