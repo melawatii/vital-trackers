@@ -4,14 +4,27 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Form request for validating and authorizing new vital type creation.
+ */
 class StoreVitalTypeRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
+        // Allow all authorized users to make this request
         return true;
     }
 
-    /** Validation rules for creating a vital type */
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -21,8 +34,10 @@ class StoreVitalTypeRequest extends FormRequest
             'input_type'        => ['required', 'in:number,text,boolean,scale'],
             'unit'              => ['required', 'string', 'max:20'],
             'min_value'         => ['required', 'numeric'],
+            // Cross-field validation: max_value must be greater than or equal to min_value
             'max_value'         => ['required', 'numeric', 'gte:min_value'],
             'normal_range_min'  => ['required', 'numeric'],
+            // Cross-field validation: normal_range_max must be greater than or equal to normal_range_min
             'normal_range_max'  => ['required', 'numeric', 'gte:normal_range_min'],
             'sort_order'        => ['nullable', 'integer', 'min:0'],
             'note'              => ['nullable', 'string', 'max:500'],
@@ -30,6 +45,11 @@ class StoreVitalTypeRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get custom error messages for validator errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [

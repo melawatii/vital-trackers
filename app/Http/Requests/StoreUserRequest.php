@@ -4,14 +4,27 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Form request for validating and authorizing new user creation.
+ */
 class StoreUserRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
+        // Allow all authorized users to make this request
         return true;
     }
 
-    /** Validation rules for creating a new user */
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -23,6 +36,11 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get custom error messages for validator errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [

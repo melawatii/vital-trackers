@@ -2,29 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use MongoDB\Laravel\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 /**
- * User model.
+ * Model representing a system user.
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
     /**
-     * Collection name.
+     * The MongoDB collection associated with the model.
      *
      * @var string
      */
     protected $collection = 'users';
 
     /**
-     * Fillable attributes.
+     * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'uuid',
@@ -41,9 +41,9 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Hidden attributes.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -51,9 +51,9 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Cast attributes.
+     * Get the attributes that should be cast.
      *
-     * @return array
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -65,34 +65,37 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Boot model events.
+     * Boot the model and attach model event listeners.
+     *
+     * @return void
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($user) {
-
-            // Generate ULID
+            // Automatically generate a ULID for the uuid field upon creation
             $user->uuid = (string) Str::ulid();
 
-            // Default role
+            // Assign default 'user' role if not explicitly provided
             if (! $user->role) {
                 $user->role = 'user';
             }
 
-            // Default status
+            // Assign default 'active' status if not explicitly provided
             if (! $user->status) {
                 $user->status = 'active';
             }
 
-            // Set created timestamp
+            // Set the custom created_time timestamp since default Eloquent timestamps are disabled
             $user->created_time = now();
         });
     }
 
     /**
-     * Get authentication identifier name.
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
      */
     public function getAuthIdentifierName()
     {
@@ -100,7 +103,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get route key value.
+     * Get the value of the model's route key.
+     *
+     * @return string
      */
     public function getRouteKey()
     {
@@ -108,7 +113,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get email for verification.
+     * Get the email address that should be used for verification.
+     *
+     * @return string
      */
     public function getEmailForVerification()
     {
@@ -116,7 +123,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get user vital records.
+     * Get the vital records associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function vitalRecords()
     {
@@ -125,13 +134,24 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // ─── Scopes ──────────────────────────────────────────────────────────────
 
-    /** Filter active users only */
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
     }
 
-    /** Filter by role */
+    /**
+     * Scope a query to only include users of a specific role.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $role
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeRole($query, string $role)
     {
         return $query->where('role', $role);
@@ -139,19 +159,31 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
-    /** Check admin role */
+    /**
+     * Determine if the user has the administrator role.
+     *
+     * @return bool
+     */
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /** Check normal user role */
+    /**
+     * Determine if the user has the standard user role.
+     *
+     * @return bool
+     */
     public function isUser(): bool
     {
         return $this->role === 'user';
     }
 
-    /** Get human-readable role label */
+    /**
+     * Get the human-readable label for the user's role.
+     *
+     * @return string
+     */
     public function getRoleLabelAttribute(): string
     {
         return match($this->role) {

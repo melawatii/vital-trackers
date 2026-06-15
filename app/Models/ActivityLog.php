@@ -6,28 +6,28 @@ use Illuminate\Support\Str;
 use MongoDB\Laravel\Eloquent\Model;
 
 /**
- * Activity log model.
+ * Model representing an activity log entry in the system.
  */
 class ActivityLog extends Model
 {
     /**
-     * Collection name.
+     * The MongoDB collection associated with the model.
      *
      * @var string
      */
     protected $collection = 'activity_logs';
 
     /**
-     * Primary key.
+     * The primary key for the model.
      *
      * @var string
      */
     protected $primaryKey = '_id';
 
     /**
-     * Fillable attributes.
+     * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'uuid',
@@ -41,41 +41,37 @@ class ActivityLog extends Model
     ];
 
     /**
-     * Disable timestamps.
+     * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
 
     /**
-     * Boot model event.
+     * Boot the model and attach model event listeners.
+     *
+     * @return void
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-
-            /**
-             * Generate UUID.
-             */
+            // Automatically generate a ULID for the uuid field upon creation
             $model->uuid = (string) Str::ulid();
 
-            /**
-             * Generate created time.
-             */
+            // Set the custom created_time timestamp since default Eloquent timestamps are disabled
             $model->created_time = now();
         });
     }
 
     /**
-     * User relation.
+     * Get the user that owns the activity log.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
-        return $this->belongsTo(
-            User::class,
-            'user_id'
-        );
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

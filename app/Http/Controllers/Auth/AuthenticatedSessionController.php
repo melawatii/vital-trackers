@@ -2,25 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Auth;
-
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\RedirectResponse;
-
-use App\Http\Requests\Auth\LoginRequest;
-
 /**
- * Handle user authentication session.
+ * Controller responsible for handling user authentication sessions.
  */
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display login page.
+     * Display the login view.
+     *
+     * @return View
      */
     public function create(): View
     {
@@ -28,72 +25,47 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle login request.
+     * Handle an incoming authentication request.
+     *
+     * @param LoginRequest $request
+     * @return RedirectResponse
      */
-    public function store(
-        LoginRequest $request
-    ): RedirectResponse {
-
-        /**
-         * Authenticate login request.
-         */
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        // Attempt to authenticate the user using the LoginRequest rules
         $request->authenticate();
 
-        /**
-         * Regenerate session.
-         */
-        $request
-            ->session()
-            ->regenerate();
+        // Regenerate the session ID to prevent session fixation attacks
+        $request->session()->regenerate();
 
-        /**
-         * Store activity log.
-         */
-        activity_log(
-            'login',
-            'User logged into application.'
-        );
+        // Log the successful login activity
+        activity_log('login', 'User logged into application.');
 
-        /**
-         * Redirect user.
-         */
+        // Redirect to the intended URL or fall back to the dashboard
         return redirect()->intended('/dashboard');
     }
 
     /**
-     * Handle logout request.
+     * Destroy an authenticated session (Log out the user).
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function destroy(
-        Request $request
-    ): RedirectResponse {
+    public function destroy(Request $request): RedirectResponse
+    {
+        // Log the logout activity before terminating the session
+        activity_log('logout', 'User logged out from application.');
 
-        /**
-         * Store activity log.
-         */
-        activity_log(
-            'logout',
-            'User logged out from application.'
-        );
-
-        /**
-         * Logout current user.
-         */
+        // Invalidate the user's authentication session
         Auth::guard('web')->logout();
 
-        /**
-         * Invalidate session.
-         */
-        $request
-            ->session()
-            ->invalidate();
+        // Invalidate the entire session to clear all data
+        $request->session()->invalidate();
 
-        /**
-         * Regenerate CSRF token.
-         */
-        $request
-            ->session()
-            ->regenerateToken();
+        // Regenerate the CSRF token to prevent CSRF attacks on the next request
+        $request->session()->regenerateToken();
 
+        // Redirect to the application's root path
         return redirect('/');
     }
 }

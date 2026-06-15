@@ -2,55 +2,35 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\RedirectResponse;
-
 /**
- * Handle verification email notification.
+ * Controller responsible for handling email verification notification requests.
  */
 class EmailVerificationNotificationController extends Controller
 {
     /**
-     * Send verification email.
+     * Send a new email verification notification.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(
-        Request $request
-    ): RedirectResponse {
-
-        /**
-         * Prevent duplicate verification.
-         */
-        if (
-            $request
-                ->user()
-                ->hasVerifiedEmail()
-        ) {
-
-            return redirect()
-                ->route('dashboard');
+    public function store(Request $request): RedirectResponse
+    {
+        // Prevent duplicate verification emails if the user is already verified
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('dashboard');
         }
 
-        /**
-         * Send verification notification.
-         */
-        $request
-            ->user()
-            ->sendEmailVerificationNotification();
+        // Dispatch the verification email to the user's registered address
+        $request->user()->sendEmailVerificationNotification();
 
-        /**
-         * Store activity log.
-         */
-        activity_log(
-            'verification_email',
-            'User resend verification email.'
-        );
+        // Log the email verification resend activity
+        activity_log('verification_email', 'User resend verification email.');
 
-        return back()->with(
-            'status',
-            'verification-link-sent'
-        );
+        // Redirect back with a status flag to display the 'link sent' alert to the user
+        return back()->with('status', 'verification-link-sent');
     }
 }

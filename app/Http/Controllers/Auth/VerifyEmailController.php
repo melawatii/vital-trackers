@@ -8,38 +8,30 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
 /**
- * Handle email verification.
+ * Controller responsible for handling email verification confirmations.
  */
 class VerifyEmailController extends Controller
 {
     /**
-     * Verify email address.
+     * Mark the authenticated user's email address as verified.
+     *
+     * @param EmailVerificationRequest $request
+     * @return RedirectResponse
      */
-    public function __invoke(
-        EmailVerificationRequest $request
-    ): RedirectResponse {
-
-        // Check verified email
+    public function __invoke(EmailVerificationRequest $request): RedirectResponse
+    {
+        // Only proceed if the user's email has not already been verified
         if (! $request->user()->hasVerifiedEmail()) {
-
-            // Update verification timestamp
+            // Set the email_verified_at timestamp to the current time
             $request->user()->forceFill([
                 'email_verified_at' => now(),
             ])->save();
 
-            // Trigger verified event
-            event(
-                new Verified(
-                    $request->user()
-                )
-            );
+            // Dispatch the Verified event to notify the system (e.g., for listeners)
+            event(new Verified($request->user()));
         }
 
-        return redirect()
-            ->route('dashboard')
-            ->with(
-                'success',
-                'Email verified successfully.'
-            );
+        // Redirect to the dashboard with a success flash message
+        return redirect()->route('dashboard')->with('success', 'Email verified successfully.');
     }
 }

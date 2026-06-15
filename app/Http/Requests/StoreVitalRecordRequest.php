@@ -4,16 +4,30 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Form request for validating and authorizing new vital record creation.
+ */
 class StoreVitalRecordRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
+        // Allow all authorized users to make this request
         return true;
     }
 
-    /** Validation rules for creating a vital record */
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
+        // Define base validation rules for vital record fields
         $rules = [
             'type_id'     => ['required', 'string'],
             'category_id' => ['required', 'string'],
@@ -24,7 +38,7 @@ class StoreVitalRecordRequest extends FormRequest
             'recorded_at' => ['required', 'date'],
         ];
 
-        // Admin can specify user_id; otherwise it's set to auth()->id()
+        // Admin users can assign records to other users, so conditionally add user_id validation
         if (auth()->check() && auth()->user()->role === 'admin') {
             $rules['user_id'] = ['nullable', 'string', 'exists:users,_id'];
         }
@@ -32,6 +46,11 @@ class StoreVitalRecordRequest extends FormRequest
         return $rules;
     }
 
+    /**
+     * Get custom error messages for validator errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
