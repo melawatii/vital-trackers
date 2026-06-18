@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VitalCategoryController;
 use App\Http\Controllers\VitalRecordController;
@@ -19,11 +20,12 @@ use Illuminate\Support\Facades\Route;
  * Redirect root URL.
  */
 
+Route::redirect('/', '/dashboard');
+
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard route
-    Route::redirect('/', '/dashboard');
-    Route::get('/dashboard', function () { return view('dashboard.index'); })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Vital Categories routes
     Route::get('vital-categories/datatable', [VitalCategoryController::class, 'datatable'])->name('vital-categories.datatable');
@@ -41,7 +43,6 @@ Route::middleware(['auth'])->group(function () {
     // Users routes
     Route::get('users/datatable', [UserController::class, 'datatable'])->name('users.datatable');
     Route::resource('users', UserController::class);
-
 
 });
 
