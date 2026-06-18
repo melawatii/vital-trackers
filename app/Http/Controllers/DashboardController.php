@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\VitalCategory;
 use App\Models\VitalRecord;
@@ -9,31 +10,36 @@ use App\Models\VitalType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+/**
+ * Controller responsible for displaying the main dashboard with aggregated statistics.
+ */
 class DashboardController extends Controller
 {
     /**
      * Display the main dashboard with aggregated stats and chart data.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $now       = Carbon::now();
-        $thisMonth = $now->startOfMonth()->copy();
-        $lastMonth = $now->copy()->subMonth()->startOfMonth();
+        // Initialize date boundaries for current and previous month comparisons
+        $now          = Carbon::now();
+        $thisMonth    = $now->startOfMonth()->copy();
+        $lastMonth    = $now->copy()->subMonth()->startOfMonth();
         $lastMonthEnd = $now->copy()->subMonth()->endOfMonth();
 
-        // ── Summary Stats ─────────────────────────────────────────────────────
+        // Summary Stats
+        $totalRecords     = VitalRecord::count();
+        $recordsThisMonth = VitalRecord::where('recorded_at', '>=', $thisMonth)->count();
+        $recordsLastMonth = VitalRecord::whereBetween('recorded_at', [$lastMonth, $lastMonthEnd])->count();
+        $totalUsers       = User::count();
+        $totalCategories  = VitalCategory::count();
 
-        $totalRecords      = VitalRecord::count();
-        $recordsThisMonth  = VitalRecord::where('recorded_at', '>=', $thisMonth)->count();
-        $recordsLastMonth  = VitalRecord::whereBetween('recorded_at', [$lastMonth, $lastMonthEnd])->count();
-        $totalUsers        = User::count();
-        $totalCategories   = VitalCategory::count();
-
-        // Average value of all records (numeric value field)
+        // Calculate average value of all numeric records
         $avgValue = VitalRecord::avg('value') ?? 0;
 
-        // Growth percentages vs last month
-        $recordsGrowth  = $recordsLastMonth > 0
+        // Calculate growth percentage compared to last month, avoiding division by zero
+        $recordsGrowth = $recordsLastMonth > 0
             ? round((($recordsThisMonth - $recordsLastMonth) / $recordsLastMonth) * 100, 1)
             : 0;
 
@@ -46,8 +52,7 @@ class DashboardController extends Controller
             'records_growth'     => $recordsGrowth,
         ];
 
-        // ── Records Over Time (last 30 days, daily count) ─────────────────────
-
+        // Generate daily counts for the last 30 days for the area/line chart
         $chartData = collect(range(29, 0))->map(function ($daysAgo) {
             $date  = Carbon::now()->subDays($daysAgo)->startOfDay();
             $count = VitalRecord::where('recorded_at', '>=', $date)
@@ -59,15 +64,15 @@ class DashboardController extends Controller
             ];
         });
 
-        // ── Records by Category (for donut chart) ────────────────────────────
-
-        $categoriesMap    = VitalCategory::all()->keyBy('id');
+        // Eager-load categories into a keyed map to avoid N+1 queries during grouping
+        $categoriesMap     = VitalCategory::all()->keyBy('id');
         $recordsByCategory = VitalRecord::all()
             ->groupBy('category_id')
             ->map(fn($group) => $group->count())
             ->sortDesc()
             ->take(6);
 
+        // Map the grouped records to include category names and percentages for the donut chart
         $donutData = $recordsByCategory->map(function ($count, $catId) use ($categoriesMap, $totalRecords) {
             $cat = $categoriesMap->get((string) $catId);
             return [
@@ -77,8 +82,7 @@ class DashboardController extends Controller
             ];
         })->values();
 
-        // ── Recent Vital Records (latest 5) ───────────────────────────────────
-
+        // Map category icons to their respective emoji representations for the UI
         $iconMap = [
             'droplet'     => '💧',
             'heart'       => '💚',
@@ -90,9 +94,11 @@ class DashboardController extends Controller
             'brain'       => '🧠',
         ];
 
+        // Eager-load types and users into keyed maps to prevent N+1 queries
         $typesMap = VitalType::all()->keyBy('id');
         $usersMap = User::all()->keyBy('id');
 
+        // Fetch the 5 most recent records and format them for the dashboard table
         $recentRecords = VitalRecord::orderBy('recorded_at', 'desc')
             ->limit(5)
             ->get()
@@ -110,16 +116,17 @@ class DashboardController extends Controller
                 ];
             });
 
-        // ── Top Users by Record Count ─────────────────────────────────────────
-
+        // Aggregate record counts per user and take the top 5
         $userRecordCounts = VitalRecord::all()
             ->groupBy('user_id')
             ->map(fn($g) => $g->count())
             ->sortDesc()
             ->take(5);
 
-        $maxCount  = $userRecordCounts->max() ?: 1;
-        $topUsers  = $userRecordCounts->map(function ($count, $userId) use ($usersMap, $maxCount) {
+        $maxCount = $userRecordCounts->max() ?: 1;
+
+        // Calculate the proportional width percentage for the top users chart bars
+        $topUsers = $userRecordCounts->map(function ($count, $userId) use ($usersMap, $maxCount) {
             $user = $usersMap->get((string) $userId);
             return [
                 'name'       => $user?->name ?? 'Unknown',
@@ -128,34 +135,12 @@ class DashboardController extends Controller
             ];
         })->values();
 
-        // ── System Overview ───────────────────────────────────────────────────
-
-        $system = [
-            'db_status'       => 'Healthy',
-            'active_sessions' => 8,   // placeholder — replace with real session count
-            'storage_used'    => '42.6 GB',
-            'storage_total'   => '100 GB',
-            'storage_pct'     => 42,
-            'uptime'          => '15d 6h 24m',
-        ];
-
-        // ── Import Summary (placeholder — replace with real Import model) ─────
-
-        $imports = [
-            'total'     => 18,
-            'completed' => 15,
-            'partial'   => 2,
-            'failed'    => 1,
-        ];
-
         return view('dashboard.index', compact(
             'stats',
             'chartData',
             'donutData',
             'recentRecords',
-            'topUsers',
-            'system',
-            'imports'
+            'topUsers'
         ));
     }
 }
