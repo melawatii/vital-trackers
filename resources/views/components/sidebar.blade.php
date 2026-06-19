@@ -103,18 +103,6 @@
         <p class="text-[10px] font-semibold text-gray-400 tracking-widest px-3 pt-4 pb-1.5 uppercase">System</p>
         <!-- End: Nav Section Label System -->
 
-        <!-- Begin: Nav Item Profile -->
-        <a href="{{ url('/profile') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 mb-0.5
-                {{ request()->is('profile*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800' }}">
-            <svg class="w-[18px] h-[18px] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span>Profile</span>
-        </a>
-        <!-- End: Nav Item Profile -->
-
         <!-- Begin: Nav Item Logout -->
         {{-- POST form to properly invalidate session on logout --}}
         <form method="POST" action="{{ route('logout') }}" class="m-0">
