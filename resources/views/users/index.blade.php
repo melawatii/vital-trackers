@@ -79,7 +79,7 @@
                 <thead>
                     <tr>
                         <th class="w-12">#</th>
-                        <th>Full Name</th>
+                        <th class="cursor-pointer hover:bg-slate-50 select-none">Full Name</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
@@ -122,7 +122,7 @@ $(function () {
                 orderable : false,
                 searchable: false,
             },
-            { data: 'name_html',   orderable: false },
+            { data: 'name', orderable: true, render: function(data, type, row) { return row.name_html; } },
             { data: 'username' },
             { data: 'email' },
             { data: 'role_html',   orderable: false },

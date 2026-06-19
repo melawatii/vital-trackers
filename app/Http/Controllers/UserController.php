@@ -73,6 +73,7 @@ class UserController extends Controller
                 // Return formatted row data including rendered action buttons partial
                 return [
                     'id'          => (string) $row->id,
+                    'name'        => $row->name,
                     'name_html'   => $avatarHtml,
                     'username'    => e($row->username ?? '–'),
                     'email'       => e($row->email),
@@ -86,6 +87,26 @@ class UserController extends Controller
                     ])->render(),
                 ];
             });
+
+        // Handle sorting if requested by DataTables
+        if ($request->input('order') && count($request->input('order')) > 0) {
+            $order = $request->input('order')[0];
+            $columnIndex = $order['column'];
+            $direction = $order['dir'] === 'desc' ? 'desc' : 'asc';
+
+            // Map column indices to fields
+            // 0: DT_RowIndex, 1: name, 2: username, 3: email, etc.
+            $columnMapping = [
+                1 => 'name',
+                2 => 'username',
+                3 => 'email',
+            ];
+
+            if (isset($columnMapping[$columnIndex])) {
+                $field = $columnMapping[$columnIndex];
+                $users = $users->sortBy($field, SORT_REGULAR, $direction === 'desc');
+            }
+        }
 
         // Build and return the DataTables response with raw HTML columns
         return DataTables::of($users)
