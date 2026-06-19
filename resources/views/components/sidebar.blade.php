@@ -58,6 +58,7 @@
         </a>
         <!-- End: Nav Item Vital Records -->
 
+        @if(auth()->user()->isAdmin())
         <!-- Begin: Nav Section Label Master Data -->
         <p class="text-[10px] font-semibold text-gray-400 tracking-widest px-3 pt-4 pb-1.5 uppercase">Master Data (Admin)</p>
         <!-- End: Nav Section Label Master Data -->
@@ -98,6 +99,7 @@
             <span>Vital Types</span>
         </a>
         <!-- End: Nav Item Vital Types -->
+        @endif
 
         <!-- Begin: Nav Section Label System -->
         <p class="text-[10px] font-semibold text-gray-400 tracking-widest px-3 pt-4 pb-1.5 uppercase">System</p>

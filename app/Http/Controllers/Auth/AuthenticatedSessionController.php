@@ -38,6 +38,11 @@ class AuthenticatedSessionController extends Controller
         // Regenerate the session ID to prevent session fixation attacks
         $request->session()->regenerate();
 
+        // Update the user's last login timestamp
+        if (Auth::check()) {
+            Auth::user()->update(['last_login_at' => now()]);
+        }
+
         // Log the successful login activity
         activity_log('login', 'User logged into application.');
 

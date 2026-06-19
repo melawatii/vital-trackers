@@ -20,15 +20,6 @@
         </div>
         <div style="display:flex;align-items:center;gap:10px">
 
-            {{-- Import Data button --}}
-            <button style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.875rem;font-weight:600;color:#475569;cursor:pointer"
-                    onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
-                <svg style="width:15px;height:15px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                </svg>
-                Import Data
-            </button>
-
             {{-- Export button --}}
             <button style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.875rem;font-weight:600;color:#475569;cursor:pointer"
                     onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">

@@ -40,6 +40,7 @@ class RegisteredUserController extends Controller
         // Validate the registration request payload
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:50', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -47,6 +48,7 @@ class RegisteredUserController extends Controller
         // Create a new user instance with a hashed password and default role
         $user = User::create([
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'user',

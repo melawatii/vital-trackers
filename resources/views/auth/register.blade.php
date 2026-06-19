@@ -495,7 +495,32 @@
                         @enderror
                     </div>
 
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <div class="input-wrap">
+                            <span class="input-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A5.002 5.002 0 0112 15c1.02 0 1.962.31 2.741.84M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </span>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value="{{ old('username') }}"
+                                class="form-input {{ $errors->has('username') ? 'has-error' : '' }}"
+                                placeholder="Choose a username"
+                                required
+                            >
+                        </div>
+                        @error('username')
+                            <p class="field-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Email -->
+                    <input type="hidden" id="role" name="role" value="user">
                     <div class="form-group">
                         <label class="form-label" for="email">Email Address</label>
                         <div class="input-wrap">

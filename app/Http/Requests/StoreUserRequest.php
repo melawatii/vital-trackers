@@ -29,6 +29,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name'       => ['required', 'string', 'max:100'],
+            'username'   => ['required', 'string', 'max:50', 'unique:users,username'],
             'email'      => ['required', 'email', 'max:150', 'unique:users,email'],
             'password'   => ['required', 'string', 'min:8', 'confirmed'],
             'role'       => ['required', 'in:admin,user'],
@@ -50,6 +51,8 @@ class StoreUserRequest extends FormRequest
             'password.min'       => 'Password must be at least 8 characters.',
             'password.confirmed' => 'Password confirmation does not match.',
             'role.required'      => 'Please select a role.',
+            'username.required'  => 'Username is required.',
+            'username.unique'    => 'This username is already taken.',
         ];
     }
 }

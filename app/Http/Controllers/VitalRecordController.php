@@ -26,12 +26,20 @@ class VitalRecordController extends Controller
      */
     public function index()
     {
+        // Build query based on user role
+        $query = VitalRecord::query();
+        if (!auth()->user()->isAdmin()) {
+            $query = $query->where('user_id', auth()->id());
+        }
+
         // Calculate summary statistics for the index view
         $stats = [
-            'total'        => VitalRecord::count(),
-            'this_month'   => VitalRecord::thisMonth()->count(),
-            'danger'       => VitalRecord::danger()->count(),
-            'unique_users' => count(VitalRecord::distinct('user_id')->pluck('user_id')->toArray()),
+            'total'        => $query->count(),
+            'this_month'   => $query->thisMonth()->count(),
+            'danger'       => $query->danger()->count(),
+            'unique_users' => auth()->user()->isAdmin()
+                ? count(VitalRecord::distinct('user_id')->pluck('user_id')->toArray())
+                : 1,
         ];
 
         return view('vital-records.index', compact('stats'));
@@ -75,8 +83,14 @@ class VitalRecordController extends Controller
         $typesMap      = VitalType::all()->keyBy('id');
         $usersMap      = User::all()->keyBy('id');
 
+        // Build query based on user role: admins see all, users see only their own
+        $recordsQuery = VitalRecord::orderBy('recorded_at', 'desc');
+        if (!auth()->user()->isAdmin()) {
+            $recordsQuery = $recordsQuery->where('user_id', auth()->id());
+        }
+
         // Fetch all records and map the data for DataTable consumption
-        $records = VitalRecord::orderBy('recorded_at', 'desc')->get()
+        $records = $recordsQuery->get()
             ->map(function ($row) use ($iconMap, $categoryColors, $categoriesMap, $typesMap, $usersMap) {
                 // Retrieve related models from the preloaded maps
                 $category = $categoriesMap->get((string) $row->category_id);
@@ -300,8 +314,15 @@ class VitalRecordController extends Controller
     public function destroy(string $id)
     {
         try {
+            $record = VitalRecord::findOrFail($id);
+
+            // Prevent users from deleting records that don't belong to them (unless admin)
+            if (!auth()->user()->isAdmin() && (string) $record->user_id !== (string) auth()->id()) {
+                return response()->json(['success' => false, 'message' => 'You can only delete your own records.'], 403);
+            }
+
             // Find and delete the record
-            VitalRecord::findOrFail($id)->delete();
+            $record->delete();
 
             // Return JSON success response for AJAX handling
             return response()->json(['success' => true, 'message' => 'Record deleted successfully.']);

@@ -32,6 +32,7 @@ class UpdateUserRequest extends FormRequest
 
         return [
             'name'     => ['required', 'string', 'max:100'],
+            'username' => ['required', 'string', 'max:50', "unique:users,username,{$id},_id"],
             // Ensure email is unique, but ignore the current user's ID
             'email'    => ['required', 'email', 'max:150', "unique:users,email,{$id},_id"],
             // Password is optional on update, but must meet minimum length and confirmation if provided
