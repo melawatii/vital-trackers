@@ -18,6 +18,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- End: Fonts -->
 
+    <link rel="icon" type="image/png" href="{{ asset('build/assets/logo.png') }}">
+
     <!-- Begin: Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- End: Vite Assets -->

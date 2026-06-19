@@ -20,6 +20,9 @@
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('build/assets/logo.png') }}">
+
     <style>
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
