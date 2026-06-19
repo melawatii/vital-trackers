@@ -1,16 +1,29 @@
 <!DOCTYPE html>
+<!-- Begin: HTML Document -->
 <html lang="en">
+
+<!-- Begin: Head -->
 <head>
+    <!-- Begin: Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | Vital Trackers</title>
+    <!-- End: Meta Tags -->
 
+    <!-- Begin: Title -->
+    <title>Register | Vital Trackers</title>
+    <!-- End: Title -->
+
+    <!-- Begin: Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- End: Fonts -->
 
+    <!-- Begin: Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- End: Vite Assets -->
 
+    <!-- Begin: Custom Styles -->
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -334,20 +347,29 @@
             to   { opacity:0; transform:translateX(60px); max-height:0; padding:0; margin:0; }
         }
     </style>
+    <!-- End: Custom Styles -->
 </head>
+<!-- End: Head -->
+
+<!-- Begin: Body -->
 <body>
 
-<!-- Toast container -->
+<!-- Begin: Toast Container -->
 <div id="toast-container"></div>
+<!-- End: Toast Container -->
 
+<!-- Begin: Main Layout -->
 <div class="layout">
 
-    <!-- ════════════ LEFT PANEL ════════════ -->
+    <!-- Begin: Left Panel -->
     <div class="left-panel">
+
+        <!-- Begin: Background Blobs -->
         <div class="blob-tr"></div>
         <div class="blob-bl"></div>
+        <!-- End: Background Blobs -->
 
-        <!-- Logo -->
+        <!-- Begin: Logo -->
         <div class="logo-row">
             <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="40" height="40" rx="10" fill="white" fill-opacity="0.7"/>
@@ -356,15 +378,18 @@
             </svg>
             <span class="logo-name">Vital Trackers</span>
         </div>
+        <!-- End: Logo -->
 
-        <!-- Hero -->
+        <!-- Begin: Hero Text -->
         <div class="hero">
             <h1>Create<br>Account</h1>
             <p>Join Vital Trackers and start managing your health records, monitor vital signs, and track your wellness journey.</p>
         </div>
+        <!-- End: Hero Text -->
 
-        <!-- Features -->
+        <!-- Begin: Features List -->
         <div class="features">
+            <!-- Begin: Feature Item 1 -->
             <div class="feature-item">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -376,6 +401,9 @@
                     <p>Your data is encrypted and always protected.</p>
                 </div>
             </div>
+            <!-- End: Feature Item 1 -->
+
+            <!-- Begin: Feature Item 2 -->
             <div class="feature-item">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -387,6 +415,9 @@
                     <p>Monitor vital signs and wellness activity anytime.</p>
                 </div>
             </div>
+            <!-- End: Feature Item 2 -->
+
+            <!-- Begin: Feature Item 3 -->
             <div class="feature-item">
                 <div class="feature-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -398,9 +429,11 @@
                     <p>Get insights and summaries tailored to your health.</p>
                 </div>
             </div>
+            <!-- End: Feature Item 3 -->
         </div>
+        <!-- End: Features List -->
 
-        <!-- Illustration -->
+        <!-- Begin: Illustration -->
         <div class="illustration">
             <svg viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- desk surface -->
@@ -440,18 +473,25 @@
                 <path d="M340 172 l8 8 16-18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
-    </div>
+        <!-- End: Illustration -->
 
-    <!-- ════════════ RIGHT PANEL ════════════ -->
+    </div>
+    <!-- End: Left Panel -->
+
+    <!-- Begin: Right Panel -->
     <div class="right-panel">
+
+        <!-- Begin: Card -->
         <div class="card">
 
+            <!-- Begin: Heading -->
             <div class="card-heading">
                 <h2>Create Your Account</h2>
                 <p>Please fill in the details to get started.</p>
             </div>
+            <!-- End: Heading -->
 
-            <!-- Laravel errors -->
+            <!-- Begin: Laravel Errors Alert -->
             @if ($errors->any())
                 <div class="alert-banner error">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -464,13 +504,19 @@
                     </div>
                 </div>
             @endif
+            <!-- End: Laravel Errors Alert -->
 
+            <!-- Begin: Register Form -->
             <form method="POST" action="{{ route('register') }}" id="register-form">
-                @csrf
 
+                <!-- Begin: CSRF Token -->
+                @csrf
+                <!-- End: CSRF Token -->
+
+                <!-- Begin: Fields Grid -->
                 <div class="fields-grid">
 
-                    <!-- Full Name -->
+                    <!-- Begin: Full Name Input Group -->
                     <div class="form-group">
                         <label class="form-label" for="name">Full Name</label>
                         <div class="input-wrap">
@@ -494,8 +540,9 @@
                             <p class="field-error">{{ $message }}</p>
                         @enderror
                     </div>
+                    <!-- End: Full Name Input Group -->
 
-                    <!-- Username -->
+                    <!-- Begin: Username Input Group -->
                     <div class="form-group">
                         <label class="form-label" for="username">Username</label>
                         <div class="input-wrap">
@@ -518,8 +565,9 @@
                             <p class="field-error">{{ $message }}</p>
                         @enderror
                     </div>
+                    <!-- End: Username Input Group -->
 
-                    <!-- Email -->
+                    <!-- Begin: Hidden Role & Email Input Group -->
                     <input type="hidden" id="role" name="role" value="user">
                     <div class="form-group">
                         <label class="form-label" for="email">Email Address</label>
@@ -543,8 +591,9 @@
                             <p class="field-error">{{ $message }}</p>
                         @enderror
                     </div>
+                    <!-- End: Hidden Role & Email Input Group -->
 
-                    <!-- Password -->
+                    <!-- Begin: Password Input Group -->
                     <div class="form-group">
                         <label class="form-label" for="password">Password</label>
                         <div class="input-wrap">
@@ -575,8 +624,9 @@
                             <p class="field-error">{{ $message }}</p>
                         @enderror
                     </div>
+                    <!-- End: Password Input Group -->
 
-                    <!-- Confirm Password -->
+                    <!-- Begin: Confirm Password Input Group -->
                     <div class="form-group">
                         <label class="form-label" for="password_confirmation">Confirm Password</label>
                         <div class="input-wrap">
@@ -604,18 +654,21 @@
                             </button>
                         </div>
                     </div>
+                    <!-- End: Confirm Password Input Group -->
 
-                </div><!-- /fields-grid -->
+                </div>
+                <!-- End: Fields Grid -->
 
-                <!-- Terms & Conditions -->
+                <!-- Begin: Terms & Conditions -->
                 <div class="terms-row">
                     <input type="checkbox" id="terms" name="terms" required>
                     <label for="terms">
                         I agree to the <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a>.
                     </label>
                 </div>
+                <!-- End: Terms & Conditions -->
 
-                <!-- Submit -->
+                <!-- Begin: Submit Button -->
                 <button type="submit" class="btn-submit" id="submit-btn">
                     <span class="spinner" id="spinner"></span>
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -623,20 +676,30 @@
                     </svg>
                     <span id="btn-text">Create Account</span>
                 </button>
+                <!-- End: Submit Button -->
 
-                <!-- Login link -->
+                <!-- Begin: Login Link -->
                 <p class="login-link">
                     Already have an account? <a href="{{ route('login') }}">Login here</a>
                 </p>
+                <!-- End: Login Link -->
 
             </form>
+            <!-- End: Register Form -->
+
         </div>
+        <!-- End: Card -->
+
     </div>
+    <!-- End: Right Panel -->
 
 </div>
+<!-- End: Main Layout -->
 
+<!-- Begin: Scripts -->
 <script>
-    /* ─── Toast ─── */
+    /* ─── Toast Utility ─── */
+    // Function to dynamically generate and display toast notifications with auto-dismiss capability
     function showToast({ type = 'info', title, message, duration = 5000 }) {
         const icons = {
             success: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
@@ -654,6 +717,8 @@
             <button class="toast-close">×</button>
         `;
         document.getElementById('toast-container').appendChild(toast);
+
+        // Auto-dismiss logic
         const dismiss = () => {
             toast.classList.add('hiding');
             toast.addEventListener('animationend', () => toast.remove(), { once: true });
@@ -662,7 +727,8 @@
         if (duration > 0) setTimeout(dismiss, duration);
     }
 
-    /* ─── Password toggles ─── */
+    /* ─── Password Toggles ─── */
+    // Attach event listeners to all password toggle buttons to show/hide password text
     document.querySelectorAll('.pw-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
             const input = document.getElementById(btn.dataset.target);
@@ -673,7 +739,8 @@
         });
     });
 
-    /* ─── Loading on submit ─── */
+    /* ─── Loading State on Submit ─── */
+    // Handle form submission: validate inputs, check terms, trigger loading state, and show info toast
     const form      = document.getElementById('register-form');
     const submitBtn = document.getElementById('submit-btn');
     const spinner   = document.getElementById('spinner');
@@ -687,6 +754,7 @@
         const role     = document.getElementById('role').value;
         const terms    = document.getElementById('terms').checked;
 
+        // Basic client-side validation
         if (!name || !email || !password || !confirm || !role) {
             e.preventDefault();
             showToast({ type: 'error', title: 'Incomplete Form', message: 'Please fill in all required fields.' });
@@ -703,6 +771,7 @@
             return;
         }
 
+        // Show loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('loading');
         spinner.style.display = 'block';
@@ -710,7 +779,8 @@
         showToast({ type: 'info', title: 'Please wait', message: 'Setting up your account…', duration: 4000 });
     });
 
-    /* ─── Laravel error toasts ─── */
+    /* ─── Laravel Error Toasts ─── */
+    // Intercept Laravel session errors/status on DOM load and convert them to toast notifications
     @if ($errors->any())
         document.addEventListener('DOMContentLoaded', () => {
             @foreach ($errors->all() as $error)
@@ -725,6 +795,9 @@
         });
     @endif
 </script>
+<!-- End: Scripts -->
 
 </body>
+<!-- End: Body -->
 </html>
+<!-- End: HTML Document -->

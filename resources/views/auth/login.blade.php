@@ -1,17 +1,29 @@
 <!DOCTYPE html>
+<!-- Begin: HTML Document -->
 <html lang="en">
 
+<!-- Begin: Head -->
 <head>
+    <!-- Begin: Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Vital Trackers</title>
+    <!-- End: Meta Tags -->
 
+    <!-- Begin: Title -->
+    <title>Login | Vital Trackers</title>
+    <!-- End: Title -->
+
+    <!-- Begin: Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- End: Fonts -->
 
+    <!-- Begin: Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- End: Vite Assets -->
 
+    <!-- Begin: Custom Styles -->
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -340,71 +352,84 @@
         .alert-banner.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
         .alert-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
     </style>
+    <!-- End: Custom Styles -->
 </head>
+<!-- End: Head -->
 
+<!-- Begin: Body -->
 <body>
 
-<!-- Toast container -->
+<!-- Begin: Toast Container -->
 <div id="toast-container"></div>
+<!-- End: Toast Container -->
 
+<!-- Begin: Main Layout -->
 <div class="layout">
 
-    <!-- ════════════ LEFT ════════════ -->
+    <!-- Begin: Left Panel -->
     <div class="left-panel">
+
+        <!-- Begin: Background Blobs -->
         <div class="blob-tl"></div>
         <div class="blob-br"></div>
+        <!-- End: Background Blobs -->
 
+        <!-- Begin: Left Content -->
         <div class="left-content">
-            <!-- Top -->
+
+            <!-- Begin: Top Section (Logo & Hero) -->
             <div>
-                <!-- Logo -->
+
+                <!-- Begin: Logo -->
                 <div class="logo-box">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                     </svg>
                 </div>
+                <!-- End: Logo -->
 
-                <!-- Hero text -->
+                <!-- Begin: Hero Text -->
                 <div class="hero-text">
                     <h1>Welcome<br>Back!</h1>
                     <p>Sign in to continue managing<br>vital records with ease.</p>
                 </div>
+                <!-- End: Hero Text -->
 
-                <!-- Illustration area -->
+                <!-- Begin: Illustration Area -->
                 <div class="hero-image">
                     <div class="hero-image-inner">
-                        <!-- Plant SVG -->
+
+                        <!-- Begin: Plant SVG -->
                         <svg class="plant-svg" width="80" height="110" viewBox="0 0 80 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- pot -->
                             <rect x="22" y="78" width="36" height="28" rx="6" fill="#b8d4f0"/>
                             <rect x="18" y="73" width="44" height="10" rx="5" fill="#cce0f7"/>
-                            <!-- stem -->
                             <path d="M40 75 C40 60 40 45 40 30" stroke="#7ab8a0" stroke-width="3" stroke-linecap="round"/>
-                            <!-- leaves -->
                             <ellipse cx="40" cy="50" rx="18" ry="10" fill="#a8d5b5" transform="rotate(-30 40 50)"/>
                             <ellipse cx="40" cy="38" rx="16" ry="9" fill="#b8dfc5" transform="rotate(25 40 38)"/>
                             <ellipse cx="40" cy="28" rx="14" ry="8" fill="#c8e8d0" transform="rotate(-15 40 28)"/>
                         </svg>
+                        <!-- End: Plant SVG -->
 
-                        <!-- Folders SVG -->
+                        <!-- Begin: Folders SVG -->
                         <svg class="folders-svg" width="100" height="110" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <!-- folder 1 -->
                             <rect x="10" y="30" width="28" height="60" rx="6" fill="#89b4e8"/>
                             <rect x="10" y="24" width="16" height="10" rx="4" fill="#a8c8f0"/>
-                            <!-- folder 2 -->
                             <rect x="42" y="20" width="28" height="70" rx="6" fill="#6fa0d8"/>
                             <rect x="42" y="14" width="16" height="10" rx="4" fill="#90bce8"/>
-                            <!-- folder 3 -->
                             <rect x="74" y="35" width="22" height="55" rx="6" fill="#a8c8f0"/>
                             <rect x="74" y="29" width="14" height="10" rx="4" fill="#c0d8f8"/>
                         </svg>
+                        <!-- End: Folders SVG -->
 
                         <div class="desk-scene"></div>
                     </div>
                 </div>
-            </div>
+                <!-- End: Illustration Area -->
 
-            <!-- Trust badge -->
+            </div>
+            <!-- End: Top Section (Logo & Hero) -->
+
+            <!-- Begin: Trust Badge -->
             <div class="trust-badge">
                 <div class="badge-icon-wrap">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -416,20 +441,28 @@
                     <p>for your health data.</p>
                 </div>
             </div>
-        </div>
-    </div>
+            <!-- End: Trust Badge -->
 
-    <!-- ════════════ RIGHT ════════════ -->
+        </div>
+        <!-- End: Left Content -->
+
+    </div>
+    <!-- End: Left Panel -->
+
+    <!-- Begin: Right Panel -->
     <div class="right-panel">
+
+        <!-- Begin: Card -->
         <div class="card">
 
-            <!-- Heading -->
+            <!-- Begin: Heading -->
             <div class="card-heading">
                 <h2>Login</h2>
                 <p>Please enter your credentials to access your account.</p>
             </div>
+            <!-- End: Heading -->
 
-            <!-- Laravel session errors / success -->
+            <!-- Begin: Error Alert -->
             @if ($errors->any())
                 <div class="alert-banner error">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -438,7 +471,9 @@
                     {{ $errors->first() }}
                 </div>
             @endif
+            <!-- End: Error Alert -->
 
+            <!-- Begin: Session Status Alert -->
             @if (session('status'))
                 <div class="alert-banner success">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -447,12 +482,16 @@
                     {{ session('status') }}
                 </div>
             @endif
+            <!-- End: Session Status Alert -->
 
-            <!-- FORM -->
+            <!-- Begin: Login Form -->
             <form method="POST" action="{{ route('login') }}" id="login-form">
-                @csrf
 
-                <!-- Email -->
+                <!-- Begin: CSRF Token -->
+                @csrf
+                <!-- End: CSRF Token -->
+
+                <!-- Begin: Email Input Group -->
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <div class="input-wrap">
@@ -476,8 +515,9 @@
                         <p class="field-error">{{ $message }}</p>
                     @enderror
                 </div>
+                <!-- End: Email Input Group -->
 
-                <!-- Password -->
+                <!-- Begin: Password Input Group -->
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="input-wrap">
@@ -495,12 +535,10 @@
                             required
                         >
                         <button type="button" class="pw-toggle" id="toggle-pw" aria-label="Toggle password visibility">
-                            <!-- Eye icon (shown when password hidden) -->
                             <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
-                            <!-- Eye-off icon (shown when password visible) -->
                             <svg id="eye-off-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
                             </svg>
@@ -510,8 +548,9 @@
                         <p class="field-error">{{ $message }}</p>
                     @enderror
                 </div>
+                <!-- End: Password Input Group -->
 
-                <!-- Remember / Forgot -->
+                <!-- Begin: Remember & Forgot Links -->
                 <div class="row-extras">
                     <label class="remember-label">
                         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -519,27 +558,38 @@
                     </label>
                     <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
                 </div>
+                <!-- End: Remember & Forgot Links -->
 
-                <!-- Submit -->
+                <!-- Begin: Submit Button -->
                 <button type="submit" class="btn-submit" id="submit-btn">
                     <span class="spinner" id="spinner"></span>
                     <span class="btn-text" id="btn-text">Login</span>
                 </button>
+                <!-- End: Submit Button -->
 
-                <!-- Register -->
+                <!-- Begin: Register Link -->
                 <p class="register-link">
                     Don't have an account?
                     <a href="{{ route('register') }}">Register here</a>
                 </p>
+                <!-- End: Register Link -->
+
             </form>
+            <!-- End: Login Form -->
 
         </div>
+        <!-- End: Card -->
+
     </div>
+    <!-- End: Right Panel -->
 
 </div>
+<!-- End: Main Layout -->
 
+<!-- Begin: Scripts -->
 <script>
     /* ─── Toast utility ─── */
+    // Function to dynamically generate and display toast notifications with auto-dismiss capability
     function showToast({ type = 'info', title, message, duration = 4000 }) {
         const icons = {
             success: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
@@ -570,6 +620,7 @@
     }
 
     /* ─── Password toggle ─── */
+    // Toggle visibility of the password input field and swap the eye icon accordingly
     const pwInput   = document.getElementById('password');
     const toggleBtn = document.getElementById('toggle-pw');
     const eyeIcon   = document.getElementById('eye-icon');
@@ -583,23 +634,24 @@
     });
 
     /* ─── Loading state on submit ─── */
+    // Handle form submission: validate inputs, trigger loading state, and show info toast
     const form      = document.getElementById('login-form');
     const submitBtn = document.getElementById('submit-btn');
     const btnText   = document.getElementById('btn-text');
     const spinner   = document.getElementById('spinner');
 
     form.addEventListener('submit', (e) => {
-        // Basic client-side validation toast
         const email    = document.getElementById('email').value.trim();
         const password = pwInput.value;
 
+        // Basic client-side validation
         if (!email || !password) {
             e.preventDefault();
             showToast({ type: 'error', title: 'Incomplete Form', message: 'Please fill in your email and password.' });
             return;
         }
 
-        // Show loading
+        // Show loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('loading');
         spinner.style.display = 'block';
@@ -609,6 +661,7 @@
     });
 
     /* ─── Show Laravel errors as toast too ─── */
+    // Intercept Laravel session errors/status on DOM load and convert them to toast notifications
     @if ($errors->any())
         document.addEventListener('DOMContentLoaded', () => {
             showToast({
@@ -629,6 +682,9 @@
         });
     @endif
 </script>
+<!-- End: Scripts -->
 
 </body>
+<!-- End: Body -->
 </html>
+<!-- End: HTML Document -->

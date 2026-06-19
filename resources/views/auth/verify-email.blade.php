@@ -1,16 +1,29 @@
 <!DOCTYPE html>
+<!-- Begin: HTML Document -->
 <html lang="en">
+
+<!-- Begin: Head -->
 <head>
+    <!-- Begin: Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Email | Vital Trackers</title>
+    <!-- End: Meta Tags -->
 
+    <!-- Begin: Title -->
+    <title>Verify Email | Vital Trackers</title>
+    <!-- End: Title -->
+
+    <!-- Begin: Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- End: Fonts -->
 
+    <!-- Begin: Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- End: Vite Assets -->
 
+    <!-- Begin: Custom Styles -->
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -311,26 +324,37 @@
             to   { opacity:0; transform:translateX(60px); max-height:0; padding:0; margin:0; }
         }
     </style>
+    <!-- End: Custom Styles -->
 </head>
+<!-- End: Head -->
+
+<!-- Begin: Body -->
 <body>
 
+<!-- Begin: Toast Container -->
 <div id="toast-container"></div>
+<!-- End: Toast Container -->
 
+<!-- Begin: Main Layout -->
 <div class="layout">
 
-    <!-- ════════════ LEFT PANEL ════════════ -->
+    <!-- Begin: Left Panel -->
     <div class="left-panel">
+
+        <!-- Begin: Background Blobs -->
         <div class="blob-tr"></div>
         <div class="blob-ml"></div>
+        <!-- End: Background Blobs -->
 
-        <!-- dot grid decoration -->
+        <!-- Begin: Dot Grid Decoration -->
         <div class="dot-grid">
             @for ($i = 0; $i < 35; $i++)
                 <span></span>
             @endfor
         </div>
+        <!-- End: Dot Grid Decoration -->
 
-        <!-- Logo -->
+        <!-- Begin: Logo -->
         <div class="logo-row">
             <svg width="38" height="38" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="40" height="40" rx="10" fill="white" fill-opacity="0.7"/>
@@ -339,98 +363,89 @@
             </svg>
             <span class="logo-name">Vital Trackers</span>
         </div>
+        <!-- End: Logo -->
 
-        <!-- Hero -->
+        <!-- Begin: Hero Text -->
         <div class="hero">
             <h1>Almost There!</h1>
             <p>Please verify your email address to activate your account and start managing your health records.</p>
         </div>
+        <!-- End: Hero Text -->
 
-        <!-- Illustration -->
+        <!-- Begin: Illustration -->
         <div class="illustration">
             <svg viewBox="0 0 420 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- desk -->
                 <rect x="0" y="258" width="420" height="42" fill="#ccdff5"/>
-
-                <!-- plant pot -->
                 <rect x="16" y="222" width="38" height="38" rx="8" fill="#b8cfe8"/>
                 <rect x="11" y="217" width="48" height="10" rx="5" fill="#cee0f5"/>
                 <rect x="33" y="170" width="5" height="50" rx="2.5" fill="#68b88a"/>
                 <ellipse cx="35" cy="184" rx="22" ry="14" fill="#7ac89a" transform="rotate(-26 35 184)"/>
                 <ellipse cx="35" cy="168" rx="19" ry="12" fill="#8dd4a8" transform="rotate(22 35 168)"/>
                 <ellipse cx="35" cy="154" rx="17" ry="11" fill="#a0deba" transform="rotate(-12 35 154)"/>
-
-                <!-- envelope body -->
                 <rect x="110" y="80" width="195" height="182" rx="16" fill="#7aafe8"/>
-                <!-- back flap -->
                 <path d="M110 96 L207 162 L305 96" fill="none" stroke="#5a94d8" stroke-width="1.5"/>
-                <!-- top flap (open, folded back) -->
                 <path d="M110 80 L207 152 L305 80 Z" fill="#a0c8f5"/>
-
-                <!-- letter / card inside -->
                 <rect x="136" y="108" width="144" height="118" rx="10" fill="white" opacity=".94"/>
-                <!-- lines on letter -->
                 <rect x="152" y="172" width="112" height="7" rx="3.5" fill="#dbeafe"/>
                 <rect x="152" y="186" width="88" height="7" rx="3.5" fill="#dbeafe" opacity=".6"/>
-                <!-- check circle on letter -->
                 <circle cx="208" cy="145" r="24" fill="#3b82f6"/>
                 <circle cx="208" cy="145" r="24" fill="white" fill-opacity=".15"/>
                 <path d="M197 145 l8 8 16-16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-
-                <!-- pen holder cup -->
                 <rect x="325" y="210" width="52" height="50" rx="10" fill="white" opacity=".85"/>
                 <rect x="325" y="210" width="52" height="14" rx="8" fill="#cddff5"/>
-                <!-- pens -->
                 <rect x="342" y="165" width="7" height="52" rx="3.5" fill="#5b8fe8"/>
                 <rect x="342" y="160" width="7" height="10" rx="2" fill="#90baf0"/>
                 <rect x="355" y="170" width="7" height="45" rx="3.5" fill="#4a7ed8"/>
                 <rect x="355" y="165" width="7" height="10" rx="2" fill="#7aaef0"/>
-
-                <!-- send / paper-plane circle -->
                 <circle cx="296" cy="242" r="28" fill="#3b82f6"/>
                 <circle cx="296" cy="242" r="28" fill="white" fill-opacity=".12"/>
-                <!-- paper plane icon -->
                 <path d="M283 242 L314 230 L302 257 L296 245 Z" fill="white"/>
                 <path d="M296 245 L305 237" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
         </div>
-    </div>
+        <!-- End: Illustration -->
 
-    <!-- ════════════ RIGHT PANEL ════════════ -->
+    </div>
+    <!-- End: Left Panel -->
+
+    <!-- Begin: Right Panel -->
     <div class="right-panel">
+
+        <!-- Begin: Card -->
         <div class="card">
 
-            <!-- Envelope icon with check badge -->
+            <!-- Begin: Envelope Icon -->
             <div class="env-circle">
                 <span class="dot-tl"></span>
                 <span class="dot-bl"></span>
                 <div class="env-svg-wrap">
-                    <!-- open envelope -->
                     <svg class="env-icon" viewBox="0 0 52 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="0" y="8" width="52" height="34" rx="6" fill="#90baf0"/>
                         <path d="M0 14 L26 30 L52 14" fill="none" stroke="#b8d4f8" stroke-width="1.5"/>
                         <path d="M0 8 L26 26 L52 8Z" fill="#b8d4f8"/>
-                        <!-- small white letter peaking -->
                         <rect x="12" y="14" width="28" height="20" rx="4" fill="white" opacity=".9"/>
                         <rect x="17" y="20" width="18" height="3" rx="1.5" fill="#bfdbfe"/>
                         <rect x="17" y="26" width="13" height="3" rx="1.5" fill="#bfdbfe" opacity=".6"/>
                     </svg>
-                    <!-- check badge -->
+                    <!-- Begin: Check Badge -->
                     <div class="check-badge">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                         </svg>
                     </div>
+                    <!-- End: Check Badge -->
                 </div>
             </div>
+            <!-- End: Envelope Icon -->
 
-            <!-- Heading -->
+            <!-- Begin: Heading -->
             <div class="card-heading">
                 <h2>Verify Your Email</h2>
                 <p>We've sent a verification link to your email address. Please check your inbox and click the link to verify your account.</p>
             </div>
+            <!-- End: Heading -->
 
-            <!-- Session success -->
+            <!-- Begin: Session Success Alert -->
             @if (session('status') == 'verification-link-sent')
                 <div class="alert-banner success">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -439,18 +454,25 @@
                     A new verification link has been sent to your email address.
                 </div>
             @endif
+            <!-- End: Session Success Alert -->
 
-            <!-- Info box -->
+            <!-- Begin: Info Box -->
             <div class="info-box">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <p>If you didn't receive the email, you can request a new verification link.</p>
             </div>
+            <!-- End: Info Box -->
 
-            <!-- Resend form -->
+            <!-- Begin: Resend Form -->
             <form method="POST" action="{{ route('verification.send') }}" id="resend-form">
+
+                <!-- Begin: CSRF Token -->
                 @csrf
+                <!-- End: CSRF Token -->
+
+                <!-- Begin: Submit Button -->
                 <button type="submit" class="btn-submit" id="resend-btn">
                     <span class="spinner" id="spinner"></span>
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -458,29 +480,47 @@
                     </svg>
                     <span id="btn-text">Resend Verification Email</span>
                 </button>
+                <!-- End: Submit Button -->
+
+                <!-- Begin: Cooldown Text -->
                 <p class="cooldown-text" id="cooldown-text"></p>
+                <!-- End: Cooldown Text -->
+
             </form>
+            <!-- End: Resend Form -->
 
-            <!-- Divider -->
+            <!-- Begin: Divider -->
             <div class="divider">or</div>
+            <!-- End: Divider -->
 
-            <!-- Back to login (via logout) -->
+            <!-- Begin: Logout Form -->
             <form method="POST" action="{{ route('logout') }}" id="logout-form" style="display:inline;">
                 @csrf
             </form>
+            <!-- End: Logout Form -->
+
+            <!-- Begin: Back to Login Link -->
             <a href="#" class="back-link" onclick="document.getElementById('logout-form').submit(); return false;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
                 Back to Login
             </a>
+            <!-- End: Back to Login Link -->
 
         </div>
-    </div>
-</div>
+        <!-- End: Card -->
 
+    </div>
+    <!-- End: Right Panel -->
+
+</div>
+<!-- End: Main Layout -->
+
+<!-- Begin: Scripts -->
 <script>
-    /* ─── Toast ─── */
+    /* ─── Toast Utility ─── */
+    // Function to dynamically generate and display toast notifications with auto-dismiss capability
     function showToast({ type = 'info', title, message, duration = 5000 }) {
         const icons = {
             success: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
@@ -498,6 +538,8 @@
             <button class="toast-close">×</button>
         `;
         document.getElementById('toast-container').appendChild(t);
+
+        // Auto-dismiss logic
         const dismiss = () => {
             t.classList.add('hiding');
             t.addEventListener('animationend', () => t.remove(), { once: true });
@@ -514,8 +556,8 @@
     const cooldownText  = document.getElementById('cooldown-text');
     let   cooldownTimer = null;
 
+    // Handle form submission: trigger loading state and start a 60s cooldown to prevent spamming
     resendForm.addEventListener('submit', e => {
-        // If already in cooldown, block
         if (resendBtn.disabled) { e.preventDefault(); return; }
 
         resendBtn.disabled = true;
@@ -525,9 +567,7 @@
 
         showToast({ type: 'info', title: 'Please wait', message: 'Sending verification link to your inbox…', duration: 3500 });
 
-        // After 3s simulate complete (actual result handled by page reload from Laravel)
-        // Start 60s cooldown after submit — page will reload from Laravel anyway,
-        // but this guards multiple rapid clicks if something blocks the submit.
+        // Start 60s cooldown after submit to guard multiple rapid clicks
         let secs = 60;
         cooldownText.style.display = 'block';
         cooldownText.textContent = `You can resend again in ${secs}s`;
@@ -548,12 +588,16 @@
     });
 
     /* ─── Laravel session toasts ─── */
+    // Intercept Laravel session status on DOM load and convert it to a success toast
     @if (session('status') == 'verification-link-sent')
         document.addEventListener('DOMContentLoaded', () => {
             showToast({ type: 'success', title: 'Email Sent!', message: 'A new verification link has been sent to your email address.', duration: 0 });
         });
     @endif
 </script>
+<!-- End: Scripts -->
 
 </body>
+<!-- End: Body -->
 </html>
+<!-- End: HTML Document -->

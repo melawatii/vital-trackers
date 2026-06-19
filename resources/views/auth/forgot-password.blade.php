@@ -1,16 +1,28 @@
 <!DOCTYPE html>
+<!-- Begin: HTML Document -->
 <html lang="en">
+<!-- Begin: Head -->
 <head>
+    <!-- Begin: Meta Tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password | Vital Trackers</title>
+    <!-- End: Meta Tags -->
 
+    <!-- Begin: Title -->
+    <title>Forgot Password | Vital Trackers</title>
+    <!-- End: Title -->
+
+    <!-- Begin: Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- End: Fonts -->
 
+    <!-- Begin: Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- End: Vite Assets -->
 
+    <!-- Begin: Custom Styles -->
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -300,19 +312,29 @@
             to   { opacity:0; transform:translateX(60px); max-height:0; padding:0; margin:0; }
         }
     </style>
+    <!-- End: Custom Styles -->
 </head>
+<!-- End: Head -->
+
+<!-- Begin: Body -->
 <body>
 
+<!-- Begin: Toast Container -->
 <div id="toast-container"></div>
+<!-- End: Toast Container -->
 
+<!-- Begin: Main Layout -->
 <div class="layout">
 
-    <!-- ════════════ LEFT PANEL ════════════ -->
+    <!-- Begin: Left Panel -->
     <div class="left-panel">
+
+        <!-- Begin: Background Blobs -->
         <div class="blob-tr"></div>
         <div class="blob-ml"></div>
+        <!-- End: Background Blobs -->
 
-        <!-- Logo -->
+        <!-- Begin: Logo -->
         <div class="logo-row">
             <svg width="38" height="38" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="40" height="40" rx="10" fill="white" fill-opacity="0.7"/>
@@ -321,14 +343,16 @@
             </svg>
             <span class="logo-name">Vital Trackers</span>
         </div>
+        <!-- End: Logo -->
 
-        <!-- Hero -->
+        <!-- Begin: Hero Text -->
         <div class="hero">
             <h1>Reset Your<br>Password</h1>
             <p>No worries! Enter your email address and we'll send you a link to reset your password securely.</p>
         </div>
+        <!-- End: Hero Text -->
 
-        <!-- Illustration -->
+        <!-- Begin: Illustration -->
         <div class="illustration">
             <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- desk -->
@@ -382,8 +406,9 @@
                 <rect x="345" y="224" width="8" height="8" rx="2" fill="#b8d0e8"/>
             </svg>
         </div>
+        <!-- End: Illustration -->
 
-        <!-- Trust Badge -->
+        <!-- Begin: Trust Badge -->
         <div class="trust-badge">
             <div class="badge-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -395,27 +420,34 @@
                 <p>Your account is important to us.<br>We'll keep your data safe and protected.</p>
             </div>
         </div>
-    </div>
+        <!-- End: Trust Badge -->
 
-    <!-- ════════════ RIGHT PANEL ════════════ -->
+    </div>
+    <!-- End: Left Panel -->
+
+    <!-- Begin: Right Panel -->
     <div class="right-panel">
+
+        <!-- Begin: Card -->
         <div class="card">
 
-            <!-- Mail icon -->
+            <!-- Begin: Mail Icon -->
             <div class="mail-circle">
                 <span class="dot-tl"></span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
             </div>
+            <!-- End: Mail Icon -->
 
-            <!-- Heading -->
+            <!-- Begin: Heading -->
             <div class="card-heading">
                 <h2>Forgot Password?</h2>
                 <p>Enter your email address and we'll send you a link to reset your password.</p>
             </div>
+            <!-- End: Heading -->
 
-            <!-- Session status -->
+            <!-- Begin: Session Status Alert -->
             @if (session('status'))
                 <div class="alert-banner success">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -424,7 +456,9 @@
                     {{ session('status') }}
                 </div>
             @endif
+            <!-- End: Session Status Alert -->
 
+            <!-- Begin: Error Alert -->
             @if ($errors->any())
                 <div class="alert-banner error">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -433,11 +467,16 @@
                     {{ $errors->first() }}
                 </div>
             @endif
+            <!-- End: Error Alert -->
 
-            <!-- Form -->
+            <!-- Begin: Forgot Password Form -->
             <form method="POST" action="{{ route('password.email') }}" id="forgot-form">
-                @csrf
 
+                <!-- Begin: CSRF Token -->
+                @csrf
+                <!-- End: CSRF Token -->
+
+                <!-- Begin: Email Input Group -->
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <div class="input-wrap">
@@ -461,8 +500,9 @@
                         <p class="field-error">{{ $message }}</p>
                     @enderror
                 </div>
+                <!-- End: Email Input Group -->
 
-                <!-- Submit -->
+                <!-- Begin: Submit Button -->
                 <button type="submit" class="btn-submit" id="submit-btn">
                     <span class="spinner" id="spinner"></span>
                     <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -470,11 +510,13 @@
                     </svg>
                     <span id="btn-text">Send Reset Link</span>
                 </button>
+                <!-- End: Submit Button -->
 
-                <!-- Divider -->
+                <!-- Begin: Divider -->
                 <div class="divider">or</div>
+                <!-- End: Divider -->
 
-                <!-- Back to login -->
+                <!-- Begin: Back to Login Link -->
                 <div style="text-align:center;">
                     <a href="{{ route('login') }}" class="back-link">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -483,15 +525,24 @@
                         Back to Login
                     </a>
                 </div>
+                <!-- End: Back to Login Link -->
 
             </form>
+            <!-- End: Forgot Password Form -->
+
         </div>
+        <!-- End: Card -->
+
     </div>
+    <!-- End: Right Panel -->
 
 </div>
+<!-- End: Main Layout -->
 
+<!-- Begin: Scripts -->
 <script>
-    /* ─── Toast ─── */
+    /* ─── Toast Notification System ─── */
+    // Initialize and display a dynamic toast notification with auto-dismiss functionality
     function showToast({ type = 'info', title, message, duration = 5000 }) {
         const icons = {
             success: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
@@ -509,6 +560,8 @@
             <button class="toast-close">×</button>
         `;
         document.getElementById('toast-container').appendChild(t);
+
+        // Auto-dismiss logic
         const dismiss = () => {
             t.classList.add('hiding');
             t.addEventListener('animationend', () => t.remove(), { once: true });
@@ -517,12 +570,13 @@
         if (duration > 0) setTimeout(dismiss, duration);
     }
 
-    /* ─── Loading state ─── */
+    /* ─── Form Loading State ─── */
     const form      = document.getElementById('forgot-form');
     const submitBtn = document.getElementById('submit-btn');
     const spinner   = document.getElementById('spinner');
     const btnText   = document.getElementById('btn-text');
 
+    // Handle form submission: validate email, trigger loading state, and show info toast
     form.addEventListener('submit', e => {
         const email = document.getElementById('email').value.trim();
         if (!email) {
@@ -537,7 +591,8 @@
         showToast({ type: 'info', title: 'Please wait', message: 'Sending password reset link to your email…', duration: 4000 });
     });
 
-    /* ─── Laravel session toasts ─── */
+    /* ─── Laravel Session Toasts ─── */
+    // Display Laravel session messages or validation errors as toasts on DOM load
     @if (session('status'))
         document.addEventListener('DOMContentLoaded', () => {
             showToast({ type: 'success', title: 'Link Sent!', message: '{{ addslashes(session('status')) }}', duration: 0 });
@@ -550,6 +605,9 @@
         });
     @endif
 </script>
+<!-- End: Scripts -->
 
 </body>
+<!-- End: Body -->
 </html>
+<!-- End: HTML Document -->
