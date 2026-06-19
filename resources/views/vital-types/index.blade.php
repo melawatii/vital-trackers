@@ -149,7 +149,7 @@
                 <thead>
                     <tr>
                         <th class="w-12">#</th>
-                        <th>Vital Type Name</th>
+                        <th class="cursor-pointer hover:bg-slate-50 select-none">Vital Type Name</th>
                         <th>Category</th>
                         <th>Input Type</th>
                         <th>Unit</th>
@@ -192,7 +192,7 @@ $(function () {
                 orderable : false,
                 searchable: false,
             },
-            { data: 'name_html',     orderable: false },
+            { data: 'name', orderable: true, render: function(data, type, row) { return row.name_html; } },
             { data: 'category' },
             { data: 'input_badge',   orderable: false },
             { data: 'unit' },

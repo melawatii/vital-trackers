@@ -58,8 +58,28 @@ class VitalTypeController extends Controller
         // Eager-load categories into a keyed collection to prevent N+1 query issues in the loop
         $categoriesMap = VitalCategory::all()->keyBy('id');
 
-        // Fetch all types and map the data for DataTable consumption
-        $types = VitalType::orderBy('sort_order')->orderBy('created_at', 'desc')->get()
+        // Fetch all types
+        $typesQuery = VitalType::orderBy('sort_order')->orderBy('created_at', 'desc');
+
+        // Apply sorting if requested by DataTables
+        if ($request->has('order') && !empty($request->order)) {
+            foreach ($request->order as $order) {
+                $columnIndex = $order['column'];
+                $direction = $order['dir'] === 'desc' ? 'desc' : 'asc';
+
+                // Column 1 = name, Column 2 = category, Column 4 = unit
+                if ($columnIndex === 1) {
+                    $typesQuery->orderBy('name', $direction);
+                } elseif ($columnIndex === 2) {
+                    $typesQuery->orderBy('category_id', $direction);
+                } elseif ($columnIndex === 4) {
+                    $typesQuery->orderBy('unit', $direction);
+                }
+            }
+        }
+
+        // Get the sorted collection
+        $types = $typesQuery->get()
             ->map(function ($row) use ($iconMap, $categoriesMap) {
                 // Retrieve the related category from the preloaded map
                 $category = $categoriesMap->get((string) $row->category_id);
@@ -88,6 +108,7 @@ class VitalTypeController extends Controller
                 // Return formatted row data including rendered action buttons partial
                 return [
                     'id'           => (string) $row->id,
+                    'name'         => $row->name,
                     'name_html'    => $nameHtml,
                     'category'     => $category ? e($category->name) : '-',
                     'input_badge'  => $inputBadge,
