@@ -28,15 +28,23 @@ class DashboardController extends Controller
         $lastMonth    = $now->copy()->subMonth()->startOfMonth();
         $lastMonthEnd = $now->copy()->subMonth()->endOfMonth();
 
-        // Summary Stats
-        $totalRecords     = VitalRecord::count();
-        $recordsThisMonth = VitalRecord::where('recorded_at', '>=', $thisMonth)->count();
-        $recordsLastMonth = VitalRecord::whereBetween('recorded_at', [$lastMonth, $lastMonthEnd])->count();
-        $totalUsers       = User::count();
-        $totalCategories  = VitalCategory::count();
+        // Build record query by role: admin sees everything, users see only their own records
+        $recordQuery = VitalRecord::query();
+        if (!auth()->user()->isAdmin()) {
+            $recordQuery->where('user_id', auth()->id());
+        }
 
-        // Calculate average value of all numeric records
-        $avgValue = VitalRecord::avg('value') ?? 0;
+        // Summary Stats
+        $totalRecords     = (clone $recordQuery)->count();
+        $recordsThisMonth = (clone $recordQuery)->where('recorded_at', '>=', $thisMonth)->count();
+        $recordsLastMonth = (clone $recordQuery)->whereBetween('recorded_at', [$lastMonth, $lastMonthEnd])->count();
+        $totalUsers       = auth()->user()->isAdmin() ? User::count() : 1;
+        $totalCategories  = auth()->user()->isAdmin()
+            ? VitalCategory::count()
+            : count((clone $recordQuery)->distinct('category_id')->pluck('category_id')->toArray());
+
+        // Calculate average value of filtered records
+        $avgValue = (clone $recordQuery)->avg('value') ?? 0;
 
         // Calculate growth percentage compared to last month, avoiding division by zero
         $recordsGrowth = $recordsLastMonth > 0
@@ -53,9 +61,10 @@ class DashboardController extends Controller
         ];
 
         // Generate daily counts for the last 30 days for the area/line chart
-        $chartData = collect(range(29, 0))->map(function ($daysAgo) {
+        $chartData = collect(range(29, 0))->map(function ($daysAgo) use ($recordQuery) {
             $date  = Carbon::now()->subDays($daysAgo)->startOfDay();
-            $count = VitalRecord::where('recorded_at', '>=', $date)
+            $count = (clone $recordQuery)
+                ->where('recorded_at', '>=', $date)
                 ->where('recorded_at', '<', $date->copy()->addDay())
                 ->count();
             return [
@@ -66,7 +75,7 @@ class DashboardController extends Controller
 
         // Eager-load categories into a keyed map to avoid N+1 queries during grouping
         $categoriesMap     = VitalCategory::all()->keyBy('id');
-        $recordsByCategory = VitalRecord::all()
+        $recordsByCategory = (clone $recordQuery)->get()
             ->groupBy('category_id')
             ->map(fn($group) => $group->count())
             ->sortDesc()
@@ -99,7 +108,8 @@ class DashboardController extends Controller
         $usersMap = User::all()->keyBy('id');
 
         // Fetch the 5 most recent records and format them for the dashboard table
-        $recentRecords = VitalRecord::orderBy('recorded_at', 'desc')
+        $recentRecords = (clone $recordQuery)
+            ->orderBy('recorded_at', 'desc')
             ->limit(5)
             ->get()
             ->map(function ($r) use ($categoriesMap, $typesMap, $usersMap, $iconMap) {
@@ -117,7 +127,8 @@ class DashboardController extends Controller
             });
 
         // Aggregate record counts per user and take the top 5
-        $userRecordCounts = VitalRecord::all()
+        $userRecordCounts = (clone $recordQuery)
+            ->get()
             ->groupBy('user_id')
             ->map(fn($g) => $g->count())
             ->sortDesc()
