@@ -156,8 +156,68 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get chart data filtered by period (daily, weekly, monthly).
-     * Used by AJAX requests from the dashboard filter dropdown.
+     * Get dashboard stats and chart data filtered by date range.
+     * Used by AJAX requests from date range filters.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDashboardStats(Request $request)
+    {
+        // Get optional date range parameters
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        // Build record query by role
+        $recordQuery = VitalRecord::query();
+        if (!auth()->user()->isAdmin()) {
+            $recordQuery->where('user_id', auth()->id());
+        }
+
+        // Apply date filters if provided
+        if ($startDate) {
+            $recordQuery->where('recorded_at', '>=', Carbon::parse($startDate)->startOfDay());
+        }
+        if ($endDate) {
+            $recordQuery->where('recorded_at', '<=', Carbon::parse($endDate)->endOfDay());
+        }
+
+        // Summary Stats
+        $totalRecords = (clone $recordQuery)->count();
+        $avgValue = (clone $recordQuery)->avg('value') ?? 0;
+
+        $stats = [
+            'total_records' => $totalRecords,
+            'avg_value'     => round($avgValue, 1),
+        ];
+
+        // Eager-load categories into a keyed map to avoid N+1 queries during grouping
+        $categoriesMap     = VitalCategory::all()->keyBy('id');
+        $recordsByCategory = (clone $recordQuery)->get()
+            ->groupBy('category_id')
+            ->map(fn($group) => $group->count())
+            ->sortDesc()
+            ->take(6);
+
+        // Map the grouped records to include category names and percentages for the donut chart
+        $donutData = $recordsByCategory->map(function ($count, $catId) use ($categoriesMap, $totalRecords) {
+            $cat = $categoriesMap->get((string) $catId);
+            return [
+                'name'       => $cat?->name ?? 'Unknown',
+                'count'      => $count,
+                'percentage' => $totalRecords > 0 ? round(($count / $totalRecords) * 100, 1) : 0,
+            ];
+        })->values();
+
+        return response()->json([
+            'stats'     => $stats,
+            'donutData' => $donutData,
+        ]);
+    }
+
+    /**
+     * Get chart data filtered by date range and period (daily, weekly, monthly).
+     * Used by AJAX requests from chart filters.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -170,18 +230,30 @@ class DashboardController extends Controller
             $period = 'daily';
         }
 
+        // Get optional date range parameters
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
         // Build record query by role
         $recordQuery = VitalRecord::query();
         if (!auth()->user()->isAdmin()) {
             $recordQuery->where('user_id', auth()->id());
         }
 
+        // Apply date filters if provided
+        if ($startDate) {
+            $recordQuery->where('recorded_at', '>=', Carbon::parse($startDate)->startOfDay());
+        }
+        if ($endDate) {
+            $recordQuery->where('recorded_at', '<=', Carbon::parse($endDate)->endOfDay());
+        }
+
         // Generate chart data based on period
         $chartData = match ($period) {
-            'daily' => $this->getDailyChartData($recordQuery),
-            'weekly' => $this->getWeeklyChartData($recordQuery),
-            'monthly' => $this->getMonthlyChartData($recordQuery),
-            default => $this->getDailyChartData($recordQuery),
+            'daily' => $this->getDailyChartData($recordQuery, $startDate, $endDate),
+            'weekly' => $this->getWeeklyChartData($recordQuery, $startDate, $endDate),
+            'monthly' => $this->getMonthlyChartData($recordQuery, $startDate, $endDate),
+            default => $this->getDailyChartData($recordQuery, $startDate, $endDate),
         };
 
         return response()->json([
@@ -191,67 +263,125 @@ class DashboardController extends Controller
     }
 
     /**
-     * Generate daily chart data for the last 30 days.
+     * Generate daily chart data for the last 30 days or within date range.
      *
      * @param mixed $recordQuery
+     * @param string|null $startDate
+     * @param string|null $endDate
      * @return \Illuminate\Support\Collection
      */
-    private function getDailyChartData($recordQuery)
+    private function getDailyChartData($recordQuery, $startDate = null, $endDate = null)
     {
-        return collect(range(29, 0))->map(function ($daysAgo) use ($recordQuery) {
-            $date  = Carbon::now()->subDays($daysAgo)->startOfDay();
+        // Determine the date range
+        if ($startDate && $endDate) {
+            $start = Carbon::parse($startDate)->startOfDay();
+            $end = Carbon::parse($endDate)->endOfDay();
+        } else {
+            $start = Carbon::now()->subDays(29)->startOfDay();
+            $end = Carbon::now()->endOfDay();
+        }
+
+        // Generate data points for each day in the range
+        $result = [];
+        $current = $start->copy();
+        
+        while ($current <= $end) {
+            $dayEnd = $current->copy()->endOfDay();
             $count = (clone $recordQuery)
-                ->where('recorded_at', '>=', $date)
-                ->where('recorded_at', '<', $date->copy()->addDay())
+                ->where('recorded_at', '>=', $current)
+                ->where('recorded_at', '<=', $dayEnd)
                 ->count();
-            return [
-                'date'  => $date->format('d M'),
+            
+            $result[] = [
+                'date'  => $current->format('d M'),
                 'count' => $count,
             ];
-        });
+            
+            $current->addDay();
+        }
+        
+        return collect($result);
     }
 
     /**
-     * Generate weekly chart data for the last 12 weeks.
+     * Generate weekly chart data for the last 12 weeks or within date range.
      *
      * @param mixed $recordQuery
+     * @param string|null $startDate
+     * @param string|null $endDate
      * @return \Illuminate\Support\Collection
      */
-    private function getWeeklyChartData($recordQuery)
+    private function getWeeklyChartData($recordQuery, $startDate = null, $endDate = null)
     {
-        return collect(range(11, 0))->map(function ($weeksAgo) use ($recordQuery) {
-            $startOfWeek = Carbon::now()->subWeeks($weeksAgo)->startOfWeek();
-            $endOfWeek   = $startOfWeek->copy()->endOfWeek();
-            $count       = (clone $recordQuery)
-                ->where('recorded_at', '>=', $startOfWeek)
-                ->where('recorded_at', '<=', $endOfWeek)
+        // Determine the date range
+        if ($startDate && $endDate) {
+            $start = Carbon::parse($startDate)->startOfWeek();
+            $end = Carbon::parse($endDate)->endOfWeek();
+        } else {
+            $start = Carbon::now()->subWeeks(11)->startOfWeek();
+            $end = Carbon::now()->endOfWeek();
+        }
+
+        // Generate data points for each week in the range
+        $result = [];
+        $current = $start->copy();
+        
+        while ($current <= $end) {
+            $weekEnd = $current->copy()->endOfWeek();
+            $count = (clone $recordQuery)
+                ->where('recorded_at', '>=', $current)
+                ->where('recorded_at', '<=', $weekEnd)
                 ->count();
-            return [
-                'date'  => 'W' . $startOfWeek->weekOfYear,
+            
+            $result[] = [
+                'date'  => 'W' . $current->weekOfYear,
                 'count' => $count,
             ];
-        });
+            
+            $current->addWeek();
+        }
+        
+        return collect($result);
     }
 
     /**
-     * Generate monthly chart data for the last 12 months.
+     * Generate monthly chart data for the last 12 months or within date range.
      *
      * @param mixed $recordQuery
+     * @param string|null $startDate
+     * @param string|null $endDate
      * @return \Illuminate\Support\Collection
      */
-    private function getMonthlyChartData($recordQuery)
+    private function getMonthlyChartData($recordQuery, $startDate = null, $endDate = null)
     {
-        return collect(range(11, 0))->map(function ($monthsAgo) use ($recordQuery) {
-            $startOfMonth = Carbon::now()->subMonths($monthsAgo)->startOfMonth();
-            $endOfMonth   = $startOfMonth->copy()->endOfMonth();
-            $count        = (clone $recordQuery)
-                ->where('recorded_at', '>=', $startOfMonth)
-                ->where('recorded_at', '<=', $endOfMonth)
+        // Determine the date range
+        if ($startDate && $endDate) {
+            $start = Carbon::parse($startDate)->startOfMonth();
+            $end = Carbon::parse($endDate)->endOfMonth();
+        } else {
+            $start = Carbon::now()->subMonths(11)->startOfMonth();
+            $end = Carbon::now()->endOfMonth();
+        }
+
+        // Generate data points for each month in the range
+        $result = [];
+        $current = $start->copy();
+        
+        while ($current <= $end) {
+            $monthEnd = $current->copy()->endOfMonth();
+            $count = (clone $recordQuery)
+                ->where('recorded_at', '>=', $current)
+                ->where('recorded_at', '<=', $monthEnd)
                 ->count();
-            return [
-                'date'  => $startOfMonth->format('M Y'),
+            
+            $result[] = [
+                'date'  => $current->format('M Y'),
                 'count' => $count,
             ];
-        });
+            
+            $current->addMonth();
+        }
+        
+        return collect($result);
     }
 }

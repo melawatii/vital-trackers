@@ -16,19 +16,41 @@
 @section('content')
 
     <!-- Begin: Page Header -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
         <div>
             <h1 class="text-2xl font-bold text-slate-900">Dashboard</h1>
             <p class="text-sm text-slate-500 mt-1">
                 Welcome back, {{ auth()->user()->name ?? 'User' }}! Here's what's happening with your vital records.
             </p>
         </div>
-        <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8125rem;font-weight:600;color:#475569">
-            <svg style="width:14px;height:14px;color:#94a3b8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            {{ $dateRange }}
+        <div style="display:flex;align-items:center;gap:12px">
+            <!-- Date Range Preset Filter -->
+            <select id="dateRangeFilter" style="padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.8125rem;font-weight:600;color:#475569;background:#fff;cursor:pointer;outline:none;font-family:'Plus Jakarta Sans',sans-serif">
+                <option value="this-month">This Month</option>
+                <option value="last-month">Last Month</option>
+                <option value="last-3-months">Last 3 Months</option>
+                <option value="last-6-months">Last 6 Months</option>
+                <option value="this-year">This Year</option>
+                <option value="custom">Custom Range</option>
+            </select>
+
+            <!-- Custom Date Range (Hidden by default) -->
+            <div id="customDateRange" style="display:none;gap:8px;align-items:center;flex-wrap:wrap">
+                <input type="date" id="startDate" style="padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.8125rem;background:#fff;font-family:'Plus Jakarta Sans',sans-serif" />
+                <span style="color:#94a3b8">–</span>
+                <input type="date" id="endDate" style="padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.8125rem;background:#fff;font-family:'Plus Jakarta Sans',sans-serif" />
+                <button id="applyCustomDate" style="padding:8px 14px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:.8125rem;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Apply</button>
+                <button id="cancelCustomDate" style="padding:8px 14px;background:#f1f5f9;color:#475569;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.8125rem;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">Cancel</button>
+            </div>
+
+            <!-- Display Selected Date Range -->
+            <div id="selectedDateDisplay" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.8125rem;font-weight:600;color:#475569">
+                <svg style="width:14px;height:14px;color:#94a3b8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span id="dateRangeText">{{ $dateRange }}</span>
+            </div>
         </div>
     </div>
     <!-- End: Page Header -->
@@ -47,7 +69,7 @@
                     </svg>
                 </div>
             </div>
-            <p style="font-size:1.625rem;font-weight:800;color:#0f172a;margin-bottom:6px">{{ number_format($stats['total_records']) }}</p>
+            <p style="font-size:1.625rem;font-weight:800;color:#0f172a;margin-bottom:6px" data-stat="total-records">{{ number_format($stats['total_records']) }}</p>
             <div style="display:flex;align-items:center;gap:4px">
                 <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;font-weight:700;color:#22c55e;background:#f0fdf4;padding:2px 6px;border-radius:20px">
                     <svg style="width:10px;height:10px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
@@ -134,7 +156,7 @@
                     </svg>
                 </div>
             </div>
-            <p style="font-size:1.625rem;font-weight:800;color:#0f172a;margin-bottom:6px">{{ $stats['avg_value'] }}</p>
+            <p style="font-size:1.625rem;font-weight:800;color:#0f172a;margin-bottom:6px" data-stat="avg-value">{{ $stats['avg_value'] }}</p>
             <div style="display:flex;align-items:center;gap:4px">
                 <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;font-weight:700;color:#22c55e;background:#f0fdf4;padding:2px 6px;border-radius:20px">
                     <svg style="width:10px;height:10px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
@@ -190,7 +212,7 @@
                     <!-- End: Donut Center Label -->
                 </div>
                 <!-- Begin: Donut Legend -->
-                <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+                <div style="flex:1;display:flex;flex-direction:column;gap:8px" data-donut-legend>
                     @foreach($donutData as $i => $cat)
                         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
                             <div style="display:flex;align-items:center;gap:6px;min-width:0">
@@ -326,6 +348,208 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Store the Chart.js instance globally for updates
     var lineChartInstance = null;
+    var donutChartInstance = null;
+
+    // Store current date range for filtering
+    var currentDateRange = {
+        startDate: null,
+        endDate: null,
+    };
+
+    // Helper function to calculate date ranges
+    function getDateRangeByPeriod(period) {
+        var now = new Date();
+        var startDate, endDate;
+
+        switch (period) {
+            case 'this-month':
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                break;
+            case 'last-month':
+                startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                break;
+            case 'last-3-months':
+                startDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                break;
+            case 'last-6-months':
+                startDate = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                break;
+            case 'this-year':
+                startDate = new Date(now.getFullYear(), 0, 1);
+                endDate = new Date(now.getFullYear(), 11, 31);
+                break;
+            default:
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        }
+
+        return { startDate, endDate };
+    }
+
+    // Helper function to format date
+    function formatDate(date) {
+        var options = { day: '2-digit', month: 'short', year: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    // Helper function to convert date to YYYY-MM-DD format
+    function formatDateForAPI(date) {
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    }
+
+    // Update date display
+    function updateDateDisplay(startDate, endDate) {
+        var dateText = formatDate(startDate) + ' – ' + formatDate(endDate);
+        document.getElementById('dateRangeText').textContent = dateText;
+        currentDateRange.startDate = startDate;
+        currentDateRange.endDate = endDate;
+    }
+
+    // ── Date Range Filter: Listen for dropdown changes ─────────────────────────
+    var dateRangeFilter = document.getElementById('dateRangeFilter');
+    var customDateRangeDiv = document.getElementById('customDateRange');
+    if (dateRangeFilter) {
+        dateRangeFilter.addEventListener('change', function () {
+            if (this.value === 'custom') {
+                // Show custom date range inputs
+                customDateRangeDiv.style.display = 'flex';
+                // Set default dates to today
+                var today = new Date();
+                document.getElementById('startDate').valueAsDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                document.getElementById('endDate').valueAsDate = today;
+            } else {
+                customDateRangeDiv.style.display = 'none';
+                var range = getDateRangeByPeriod(this.value);
+                updateDateDisplay(range.startDate, range.endDate);
+                loadDashboardData();
+            }
+        });
+    }
+
+    // Apply custom date range
+    var applyCustomDateBtn = document.getElementById('applyCustomDate');
+    if (applyCustomDateBtn) {
+        applyCustomDateBtn.addEventListener('click', function () {
+            var startDateInput = document.getElementById('startDate').value;
+            var endDateInput = document.getElementById('endDate').value;
+
+            if (!startDateInput || !endDateInput) {
+                alert('Please select both start and end dates');
+                return;
+            }
+
+            // Parse dates directly from input (YYYY-MM-DD format)
+            var startParts = startDateInput.split('-');
+            var endParts = endDateInput.split('-');
+            
+            var startDate = new Date(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]));
+            var endDate = new Date(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]));
+
+            if (startDate > endDate) {
+                alert('Start date must be before end date');
+                return;
+            }
+
+            updateDateDisplay(startDate, endDate);
+            loadDashboardData();
+            dateRangeFilter.value = 'custom'; // Keep custom selected
+        });
+    }
+
+    // Cancel custom date range
+    var cancelCustomDateBtn = document.getElementById('cancelCustomDate');
+    if (cancelCustomDateBtn) {
+        cancelCustomDateBtn.addEventListener('click', function () {
+            customDateRangeDiv.style.display = 'none';
+            dateRangeFilter.value = 'this-month'; // Reset to default
+        });
+    }
+
+    // Load dashboard data with current filters
+    function loadDashboardData() {
+        var period = document.getElementById('chartPeriodFilter').value;
+        var startDate = currentDateRange.startDate ? formatDateForAPI(currentDateRange.startDate) : null;
+        var endDate = currentDateRange.endDate ? formatDateForAPI(currentDateRange.endDate) : null;
+
+        // Build query parameters for chart data
+        var chartParams = new URLSearchParams();
+        chartParams.append('period', period);
+        if (startDate) chartParams.append('start_date', startDate);
+        if (endDate) chartParams.append('end_date', endDate);
+
+        // Build query parameters for stats
+        var statsParams = new URLSearchParams();
+        if (startDate) statsParams.append('start_date', startDate);
+        if (endDate) statsParams.append('end_date', endDate);
+
+        // Fetch chart data from the API
+        fetch('/dashboard/chart-data?' + chartParams.toString())
+            .then(response => response.json())
+            .then(data => {
+                // Update chart data
+                if (lineChartInstance) {
+                    lineChartInstance.data.labels = data.labels;
+                    lineChartInstance.data.datasets[0].data = data.counts;
+                    lineChartInstance.update();
+                }
+            })
+            .catch(error => console.error('Error fetching chart data:', error));
+
+        // Fetch stats data from the API
+        fetch('/dashboard/stats?' + statsParams.toString())
+            .then(response => response.json())
+            .then(data => {
+                // Update stats cards
+                if (data.stats) {
+                    document.querySelectorAll('[data-stat="total-records"]').forEach(el => {
+                        el.textContent = new Intl.NumberFormat('en-US').format(data.stats.total_records);
+                    });
+                    document.querySelectorAll('[data-stat="avg-value"]').forEach(el => {
+                        el.textContent = data.stats.avg_value;
+                    });
+                }
+
+                // Update donut chart
+                if (data.donutData && donutChartInstance) {
+                    var donutLabels = data.donutData.map(d => d.name);
+                    var donutCounts = data.donutData.map(d => d.count);
+
+                    donutChartInstance.data.labels = donutLabels;
+                    donutChartInstance.data.datasets[0].data = donutCounts;
+                    donutChartInstance.update();
+
+                    // Update donut legend
+                    var legendHtml = '';
+                    data.donutData.forEach((item, i) => {
+                        legendHtml += `
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                                <div style="display:flex;align-items:center;gap:6px;min-width:0">
+                                    <span style="width:8px;height:8px;border-radius:50%;background:${donutColors[i % donutColors.length]};flex-shrink:0;display:inline-block"></span>
+                                    <span style="font-size:.75rem;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</span>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
+                                    <span style="font-size:.75rem;font-weight:700;color:#0f172a">${item.count}</span>
+                                    <span style="font-size:.7rem;color:#94a3b8">(${item.percentage}%)</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    var legendContainer = document.querySelector('[data-donut-legend]');
+                    if (legendContainer) {
+                        legendContainer.innerHTML = legendHtml;
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching stats data:', error));
+    }
 
     // ── Line Chart: Records Over Time ─────────────────────────────────────────
     var lineEl = document.getElementById('lineChart');
@@ -374,27 +598,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var periodFilter = document.getElementById('chartPeriodFilter');
     if (periodFilter) {
         periodFilter.addEventListener('change', function () {
-            var period = this.value;
-
-            // Fetch chart data from the API
-            fetch('/dashboard/chart-data?period=' + period)
-                .then(response => response.json())
-                .then(data => {
-                    // Update chart data
-                    if (lineChartInstance) {
-                        lineChartInstance.data.labels = data.labels;
-                        lineChartInstance.data.datasets[0].data = data.counts;
-                        lineChartInstance.update();
-                    }
-                })
-                .catch(error => console.error('Error fetching chart data:', error));
+            loadDashboardData();
         });
     }
 
     // ── Donut Chart: Records by Category ─────────────────────────────────────
     var donutEl = document.getElementById('donutChart');
     if (donutEl) {
-        new Chart(donutEl, {
+        donutChartInstance = new Chart(donutEl, {
             type: 'doughnut',
             data: {
                 labels  : donutLabels,
@@ -421,6 +632,13 @@ document.addEventListener('DOMContentLoaded', function () {
             },
         });
     }
+
+    // Initialize with current month and load filtered data
+    var range = getDateRangeByPeriod('this-month');
+    currentDateRange.startDate = range.startDate;
+    currentDateRange.endDate = range.endDate;
+    updateDateDisplay(range.startDate, range.endDate);
+    loadDashboardData();
 
 });
 </script>
