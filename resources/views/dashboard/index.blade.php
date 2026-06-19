@@ -158,10 +158,10 @@
                     <p style="font-size:.9375rem;font-weight:700;color:#1e293b">Records Over Time</p>
                     <p style="font-size:.75rem;color:#94a3b8;margin-top:2px">Number of records created per day</p>
                 </div>
-                <select style="padding:5px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.75rem;font-weight:600;color:#374151;background:#fff;cursor:pointer;outline:none;font-family:'Plus Jakarta Sans',sans-serif">
-                    <option>Daily</option>
-                    <option>Weekly</option>
-                    <option>Monthly</option>
+                <select id="chartPeriodFilter" style="padding:5px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.75rem;font-weight:600;color:#374151;background:#fff;cursor:pointer;outline:none;font-family:'Plus Jakarta Sans',sans-serif">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
                 </select>
             </div>
             <!-- Begin: Line Chart Canvas -->
@@ -324,10 +324,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var donutCounts = @json($donutData->pluck('count'));
     var donutColors = @json($donutColors);
 
+    // Store the Chart.js instance globally for updates
+    var lineChartInstance = null;
+
     // ── Line Chart: Records Over Time ─────────────────────────────────────────
     var lineEl = document.getElementById('lineChart');
     if (lineEl) {
-        new Chart(lineEl, {
+        lineChartInstance = new Chart(lineEl, {
             type: 'line',
             data: {
                 labels  : lineLabels,
@@ -364,6 +367,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                 },
             },
+        });
+    }
+
+    // ── Chart Period Filter: Listen for dropdown changes ─────────────────────────
+    var periodFilter = document.getElementById('chartPeriodFilter');
+    if (periodFilter) {
+        periodFilter.addEventListener('change', function () {
+            var period = this.value;
+
+            // Fetch chart data from the API
+            fetch('/dashboard/chart-data?period=' + period)
+                .then(response => response.json())
+                .then(data => {
+                    // Update chart data
+                    if (lineChartInstance) {
+                        lineChartInstance.data.labels = data.labels;
+                        lineChartInstance.data.datasets[0].data = data.counts;
+                        lineChartInstance.update();
+                    }
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
         });
     }
 

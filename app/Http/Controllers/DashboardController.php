@@ -154,4 +154,104 @@ class DashboardController extends Controller
             'topUsers'
         ));
     }
+
+    /**
+     * Get chart data filtered by period (daily, weekly, monthly).
+     * Used by AJAX requests from the dashboard filter dropdown.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getChartData(Request $request)
+    {
+        // Validate period parameter
+        $period = $request->query('period', 'daily');
+        if (!in_array($period, ['daily', 'weekly', 'monthly'])) {
+            $period = 'daily';
+        }
+
+        // Build record query by role
+        $recordQuery = VitalRecord::query();
+        if (!auth()->user()->isAdmin()) {
+            $recordQuery->where('user_id', auth()->id());
+        }
+
+        // Generate chart data based on period
+        $chartData = match ($period) {
+            'daily' => $this->getDailyChartData($recordQuery),
+            'weekly' => $this->getWeeklyChartData($recordQuery),
+            'monthly' => $this->getMonthlyChartData($recordQuery),
+            default => $this->getDailyChartData($recordQuery),
+        };
+
+        return response()->json([
+            'labels' => $chartData->pluck('date')->values(),
+            'counts' => $chartData->pluck('count')->values(),
+        ]);
+    }
+
+    /**
+     * Generate daily chart data for the last 30 days.
+     *
+     * @param mixed $recordQuery
+     * @return \Illuminate\Support\Collection
+     */
+    private function getDailyChartData($recordQuery)
+    {
+        return collect(range(29, 0))->map(function ($daysAgo) use ($recordQuery) {
+            $date  = Carbon::now()->subDays($daysAgo)->startOfDay();
+            $count = (clone $recordQuery)
+                ->where('recorded_at', '>=', $date)
+                ->where('recorded_at', '<', $date->copy()->addDay())
+                ->count();
+            return [
+                'date'  => $date->format('d M'),
+                'count' => $count,
+            ];
+        });
+    }
+
+    /**
+     * Generate weekly chart data for the last 12 weeks.
+     *
+     * @param mixed $recordQuery
+     * @return \Illuminate\Support\Collection
+     */
+    private function getWeeklyChartData($recordQuery)
+    {
+        return collect(range(11, 0))->map(function ($weeksAgo) use ($recordQuery) {
+            $startOfWeek = Carbon::now()->subWeeks($weeksAgo)->startOfWeek();
+            $endOfWeek   = $startOfWeek->copy()->endOfWeek();
+            $count       = (clone $recordQuery)
+                ->where('recorded_at', '>=', $startOfWeek)
+                ->where('recorded_at', '<=', $endOfWeek)
+                ->count();
+            return [
+                'date'  => 'W' . $startOfWeek->weekOfYear,
+                'count' => $count,
+            ];
+        });
+    }
+
+    /**
+     * Generate monthly chart data for the last 12 months.
+     *
+     * @param mixed $recordQuery
+     * @return \Illuminate\Support\Collection
+     */
+    private function getMonthlyChartData($recordQuery)
+    {
+        return collect(range(11, 0))->map(function ($monthsAgo) use ($recordQuery) {
+            $startOfMonth = Carbon::now()->subMonths($monthsAgo)->startOfMonth();
+            $endOfMonth   = $startOfMonth->copy()->endOfMonth();
+            $count        = (clone $recordQuery)
+                ->where('recorded_at', '>=', $startOfMonth)
+                ->where('recorded_at', '<=', $endOfMonth)
+                ->count();
+            return [
+                'date'  => $startOfMonth->format('M Y'),
+                'count' => $count,
+            ];
+        });
+    }
 }

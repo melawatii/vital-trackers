@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
 
     // Master data routes (admin only)
     Route::middleware(['role:admin'])->group(function () {
