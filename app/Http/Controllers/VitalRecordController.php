@@ -84,9 +84,34 @@ class VitalRecordController extends Controller
         $usersMap      = User::all()->keyBy('id');
 
         // Build query based on user role: admins see all, users see only their own
-        $recordsQuery = VitalRecord::orderBy('recorded_at', 'desc');
+        $recordsQuery = VitalRecord::query();
         if (!auth()->user()->isAdmin()) {
             $recordsQuery = $recordsQuery->where('user_id', auth()->id());
+        }
+
+        // Apply sorting from DataTables request
+        $sortableColumns = ['recorded_at', 'type', 'unit', 'id'];
+        $order = $request->input('order');
+        if ($order && isset($order[0])) {
+            $columnIndex = $order[0]['column'] ?? 0;
+            $direction   = strtoupper($order[0]['dir'] ?? 'asc');
+
+            // Map column index to database field
+            $columnMap = [
+                1 => 'recorded_at',
+                4 => 'type_id',
+                6 => 'unit',
+            ];
+
+            if (isset($columnMap[$columnIndex]) && in_array($columnMap[$columnIndex], $sortableColumns)) {
+                $sortColumn = $columnMap[$columnIndex];
+                $recordsQuery = $recordsQuery->orderBy($sortColumn, $direction);
+            } else {
+                $recordsQuery = $recordsQuery->orderBy('recorded_at', 'desc');
+            }
+        } else {
+            // Default sorting by recorded_at descending
+            $recordsQuery = $recordsQuery->orderBy('recorded_at', 'desc');
         }
 
         // Fetch all records and map the data for DataTable consumption
