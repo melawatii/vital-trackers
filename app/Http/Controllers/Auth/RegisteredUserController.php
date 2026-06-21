@@ -64,7 +64,7 @@ class RegisteredUserController extends Controller
         // Log the successful registration activity
         activity_log('register', 'User registered new account.');
 
-        // Redirect the user to the dashboard
-        return redirect()->route('dashboard');
+        // Redirect the user to the email verification notice instead of the dashboard
+        return redirect()->route('verification.notice')->with('status', 'verification-link-sent');
     }
 }

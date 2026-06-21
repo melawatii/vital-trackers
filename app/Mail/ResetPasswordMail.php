@@ -5,7 +5,7 @@ namespace App\Mail;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyEmailMail extends Mailable
+class ResetPasswordMail extends Mailable
 {
     use SerializesModels;
 
@@ -21,8 +21,8 @@ class VerifyEmailMail extends Mailable
     public function build()
     {
         return $this->to($this->user->email)
-                    ->subject('Verify Email Address')
-                    ->view('emails.verify-email')
+                    ->subject('Reset Password Notification')
+                    ->view('emails.reset-password')
                     ->with([
                         'url' => $this->url,
                         'user' => $this->user,

@@ -136,7 +136,6 @@
             margin-bottom: 28px;
             flex-shrink: 0;
         }
-        /* decorative dots */
         .env-circle::before {
             content: '';
             position: absolute;
@@ -164,14 +163,12 @@
             bottom: 16px; left: -10px;
         }
 
-        /* envelope SVG in circle */
         .env-svg-wrap {
             position: relative; width: 52px; height: 42px;
         }
         .env-svg-wrap svg.env-icon {
             width: 52px; height: 42px; display: block;
         }
-        /* checkmark badge on envelope */
         .check-badge {
             position: absolute; top: -10px; right: -10px;
             width: 22px; height: 22px;
@@ -189,6 +186,19 @@
         .card-heading p {
             margin-top: 10px; font-size: .88rem; color: #64748b;
             line-height: 1.65; max-width: 340px;
+        }
+
+        /* email badge */
+        .email-badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: .82rem;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-top: 10px;
+            word-break: break-all;
         }
 
         /* info box */
@@ -443,7 +453,13 @@
             <!-- Begin: Heading -->
             <div class="card-heading">
                 <h2>Verify Your Email</h2>
-                <p>We've sent a verification link to your email address. Please check your inbox and click the link to verify your account.</p>
+                <p>We've sent a verification link to</p>
+                @if (auth()->check())
+                    <span class="email-badge">{{ auth()->user()->email }}</span>
+                @else
+                    <span class="email-badge">your email</span>
+                @endif
+                <p style="margin-top: 10px;">Please check your inbox and click the link to activate your account.</p>
             </div>
             <!-- End: Heading -->
 
@@ -463,7 +479,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <p>If you didn't receive the email, you can request a new verification link.</p>
+                <p>If you didn't receive the email, check your spam folder or request a new verification link below.</p>
             </div>
             <!-- End: Info Box -->
 
@@ -522,7 +538,6 @@
 <!-- Begin: Scripts -->
 <script>
     /* ─── Toast Utility ─── */
-    // Function to dynamically generate and display toast notifications with auto-dismiss capability
     function showToast({ type = 'info', title, message, duration = 5000 }) {
         const icons = {
             success: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
@@ -540,8 +555,6 @@
             <button class="toast-close">×</button>
         `;
         document.getElementById('toast-container').appendChild(t);
-
-        // Auto-dismiss logic
         const dismiss = () => {
             t.classList.add('hiding');
             t.addEventListener('animationend', () => t.remove(), { once: true });
@@ -551,14 +564,13 @@
     }
 
     /* ─── Resend with loading + 60s cooldown ─── */
-    const resendForm    = document.getElementById('resend-form');
-    const resendBtn     = document.getElementById('resend-btn');
-    const spinner       = document.getElementById('spinner');
-    const btnText       = document.getElementById('btn-text');
-    const cooldownText  = document.getElementById('cooldown-text');
+    const resendForm   = document.getElementById('resend-form');
+    const resendBtn    = document.getElementById('resend-btn');
+    const spinner      = document.getElementById('spinner');
+    const btnText      = document.getElementById('btn-text');
+    const cooldownText = document.getElementById('cooldown-text');
     let   cooldownTimer = null;
 
-    // Handle form submission: trigger loading state and start a 60s cooldown to prevent spamming
     resendForm.addEventListener('submit', e => {
         if (resendBtn.disabled) { e.preventDefault(); return; }
 
@@ -569,7 +581,6 @@
 
         showToast({ type: 'info', title: 'Please wait', message: 'Sending verification link to your inbox…', duration: 3500 });
 
-        // Start 60s cooldown after submit to guard multiple rapid clicks
         let secs = 60;
         cooldownText.style.display = 'block';
         cooldownText.textContent = `You can resend again in ${secs}s`;
@@ -590,7 +601,6 @@
     });
 
     /* ─── Laravel session toasts ─── */
-    // Intercept Laravel session status on DOM load and convert it to a success toast
     @if (session('status') == 'verification-link-sent')
         document.addEventListener('DOMContentLoaded', () => {
             showToast({ type: 'success', title: 'Email Sent!', message: 'A new verification link has been sent to your email address.', duration: 0 });
