@@ -18,6 +18,7 @@
             <h1 class="text-2xl font-bold text-slate-900">Vital Records</h1>
             <p class="text-sm text-slate-500 mt-0.5">Monitor and manage all recorded vital sign measurements.</p>
         </div>
+        
         <a href="{{ route('vital-records.create') }}"
            class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-200 transition-all duration-150 active:scale-95">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,6 +132,48 @@
                             d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                     </svg>
                 </button>
+
+                <!-- BEGIN: Export Dropdown Button -->
+                <div class="relative" id="export-dropdown-wrap">
+                    <button
+                        id="export-toggle-btn"
+                        type="button"
+                        class="inline-flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Export
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <div
+                        id="export-menu"
+                        class="absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-lg z-50 py-1.5"
+                        style="display: none;">
+                        <a
+                            id="export-excel-btn"
+                            href="{{ route('vital-records.export.excel') }}"
+                            class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition">
+                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1a1 1 0 000 2h6a1 1 0 100-2H7zm0 4a1 1 0 000 2h6a1 1 0 100-2H7zm0 4a1 1 0 100 2h3a1 1 0 100-2H7z" clip-rule="evenodd" />
+                            </svg>
+                            Export to Excel
+                        </a>
+                        <a
+                            id="export-csv-btn"
+                            href="{{ route('vital-records.export.csv') }}"
+                            class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition">
+                            <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2a1 1 0 011-1h8a1 1 0 011 1v8a1 1 0 01-1 1H6a1 1 0 01-1-1V6z" clip-rule="evenodd" />
+                            </svg>
+                            Export to CSV
+                        </a>
+                    </div>
+                </div>
+                <!-- END: Export Dropdown Button -->
+
             </div>
 
         </div>
@@ -222,15 +265,56 @@ $(function () {
         },
     });
 
+    // Export dropdown toggle logic
+    const toggleBtn = document.getElementById('export-toggle-btn');
+    const menu      = document.getElementById('export-menu');
+    const wrap      = document.getElementById('export-dropdown-wrap');
+
+    if (!toggleBtn || !menu) return;
+
+    // Toggle dropdown menu visibility
+    toggleBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = menu.style.display === 'block';
+        menu.style.display = isOpen ? 'none' : 'block';
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', function (e) {
+        if (wrap && !wrap.contains(e.target)) {
+            menu.style.display = 'none';
+        }
+    });
+
+    // Close dropdown after link is clicked (allow browser to process download)
+    document.getElementById('export-excel-btn').addEventListener('click', function () {
+        setTimeout(() => { menu.style.display = 'none'; }, 150);
+    });
+
+    document.getElementById('export-csv-btn').addEventListener('click', function () {
+        setTimeout(() => { menu.style.display = 'none'; }, 150);
+    });
+
     // Sync custom search input with DataTable
     $('#dt-search').on('keyup', function () {
         table.search(this.value).draw();
+        updateExportUrls(this.value);
     });
 
     // Sync custom page-length select
     $('#dt-length').on('change', function () {
         table.page.len(parseInt(this.value)).draw();
     });
+
+    // Update export URLs based on current search query
+    function updateExportUrls(search) {
+        const baseExcel = '{{ route("vital-records.export.excel") }}';
+        const baseCsv = '{{ route("vital-records.export.csv") }}';
+        const query = search ? '?search=' + encodeURIComponent(search) : '';
+
+        $('#export-excel-btn').attr('href', baseExcel + query);
+        $('#export-csv-btn').attr('href', baseCsv + query);
+    }
 
     // Delete record via AJAX with SweetAlert2 confirmation
     $(document).on('click', '.btn-delete-record', function () {

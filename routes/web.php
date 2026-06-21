@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -46,8 +46,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Vital Records routes
     Route::get('vital-records/datatable', [VitalRecordController::class, 'datatable'])->name('vital-records.datatable');
-    Route::get('vital-records/types-by-category', [VitalRecordController::class, 'typesByCategory'])->name('vital-records.types-by-category');
+    Route::get('vital-records/types-by-category/{categoryId}', [VitalRecordController::class, 'getTypesByCategory'])->name('vital-records.types-by-category');
     Route::resource('vital-records', VitalRecordController::class);
+    Route::get('vital-records/export/excel', [VitalRecordController::class, 'exportExcel'])->name('vital-records.export.excel');
+    Route::get('vital-records/export/csv',   [VitalRecordController::class, 'exportCsv'])->name('vital-records.export.csv');
 
 });
 

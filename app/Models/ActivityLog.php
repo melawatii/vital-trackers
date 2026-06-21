@@ -11,6 +11,13 @@ use MongoDB\Laravel\Eloquent\Model;
 class ActivityLog extends Model
 {
     /**
+     * The database connection name for the model.
+     *
+     * @var string
+     */
+    protected $connection = 'mongodb';
+
+    /**
      * The MongoDB collection associated with the model.
      *
      * @var string

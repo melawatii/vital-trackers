@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\VitalRecordExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Controller responsible for managing vital records CRUD operations and DataTables.
@@ -42,7 +44,11 @@ class VitalRecordController extends Controller
                 : 1,
         ];
 
-        return view('vital-records.index', compact('stats'));
+        // Categories and types passed to the view for the export/filter modal dropdowns
+        $categories = VitalCategory::active()->orderBy('name')->get();
+        $types      = VitalType::active()->orderBy('name')->get();
+
+        return view('vital-records.index', compact('stats', 'categories', 'types'));
     }
 
     /**
@@ -358,5 +364,33 @@ class VitalRecordController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Failed to delete record.'], 500);
         }
+    }
+
+    /**
+     * Export vital records to Excel (.xlsx)
+     */
+    public function exportExcel(Request $request)
+    {
+        $filters = $request->only(['category_id', 'type_id', 'status', 'date_from', 'date_to', 'search']);
+
+        if (!auth()->user()->isAdmin()) {
+            $filters['user_id'] = auth()->id();
+        }
+
+        return Excel::download(new VitalRecordExport($filters), 'vital-records-' . now()->format('Y-m-d') . '.xlsx');
+    }
+
+    /**
+     * Export vital records to CSV
+     */
+    public function exportCsv(Request $request)
+    {
+        $filters = $request->only(['category_id', 'type_id', 'status', 'date_from', 'date_to', 'search']);
+
+        if (!auth()->user()->isAdmin()) {
+            $filters['user_id'] = auth()->id();
+        }
+
+        return Excel::download(new VitalRecordExport($filters), 'vital-records-' . now()->format('Y-m-d') . '.csv', \Maatwebsite\Excel\Excel::CSV);
     }
 }

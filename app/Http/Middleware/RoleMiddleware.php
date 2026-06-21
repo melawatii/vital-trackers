@@ -33,10 +33,7 @@ class RoleMiddleware
         /**
          * Check authenticated user role.
          */
-        if (
-            auth()->user()->role !== $role
-        ) {
-
+        if (auth()->user()->role !== $role) {
             abort(403);
         }
 

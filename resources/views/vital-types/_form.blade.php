@@ -460,6 +460,11 @@
         document.getElementById('prev-icon').textContent     = iconMap[catIcon] || '📋';
     }
 
+    // Initialize preview on page load with current values
+    document.addEventListener('DOMContentLoaded', function () {
+        updatePreview();
+    });
+
     // Status radio interactivity
     document.querySelectorAll('.vt-status-radio').forEach(function (radio) {
         radio.addEventListener('change', function () {

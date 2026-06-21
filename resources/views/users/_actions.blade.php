@@ -4,7 +4,7 @@
 {{-- ============================================================ --}}
 
 <!-- Begin: Table Row Actions -->
-<div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;padding-right:4px">
+<div style="display:flex;align-items:center;justify-content:flex-start;gap:6px;padding-right:4px">
 
     {{-- Edit button --}}
     <a href="{{ $editUrl }}"

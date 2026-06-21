@@ -24,7 +24,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
  * Supports optional filters (category, type, status, date range) passed from the controller.
  * Used by both Excel (.xlsx) and CSV export routes via Maatwebsite\Excel.
  */
-class VitalRecordsExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithTitle, WithEvents
+class VitalRecordExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithColumnWidths, WithTitle, WithEvents
 {
     protected array $filters;
     protected Collection $categoriesMap;
@@ -51,6 +51,19 @@ class VitalRecordsExport implements FromCollection, WithHeadings, WithMapping, W
     public function collection()
     {
         $query = VitalRecord::query()->orderBy('recorded_at', 'desc');
+
+        if (!empty($this->filters['user_id'])) {
+            $query->where('user_id', $this->filters['user_id']);
+        }
+
+        if (!empty($this->filters['search'])) {
+            $search = $this->filters['search'];
+            $query->where(function($q) use ($search) {
+                $q->where('value', 'like', "%{$search}%")
+                  ->orWhere('note', 'like', "%{$search}%")
+                  ->orWhere('unit', 'like', "%{$search}%");
+            });
+        }
 
         if (!empty($this->filters['category_id'])) {
             $query->where('category_id', $this->filters['category_id']);
