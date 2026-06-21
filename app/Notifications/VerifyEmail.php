@@ -21,7 +21,7 @@ class VerifyEmail extends Notification
     public function toMail(object $notifiable)
     {
         $verificationUrl = $this->verificationUrl($notifiable);
-        return new VerifyEmailMail($verificationUrl);
+        return new VerifyEmailMail($notifiable, $verificationUrl);
     }
 
     /**

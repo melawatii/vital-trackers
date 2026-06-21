@@ -11,14 +11,16 @@ class VerifyEmailMail extends Mailable
 
     public string $url;
 
-    public function __construct(string $url)
+    public function __construct(public $user, string $url)
     {
         $this->url = $url;
     }
 
     public function build()
     {
-        return $this->view('auth.verify-email')
+        return $this->to($this->user->email)
+                    ->subject('Verify Email Address')
+                    ->view('auth.verify-email')
                     ->with(['url' => $this->url]);
     }
 }
