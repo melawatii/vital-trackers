@@ -23,7 +23,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.index');
+        // Summary statistics for users page
+        $stats = [
+            'total'    => User::count(),
+            'active'   => User::where('status', 'active')->count(),
+            'admins'   => User::where('role', 'admin')->count(),
+            'inactive' => User::where('status', 'inactive')->count(),
+        ];
+
+        return view('users.index', compact('stats'));
     }
 
     /**

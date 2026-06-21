@@ -28,6 +28,72 @@
     </div>
     <!-- End: Page Header -->
 
+    <!-- Begin: Stats Cards Row -->
+    <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
+
+        <!-- Begin: Card Total Users -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-sm text-slate-500 font-medium">Total Users</p>
+                <p class="text-3xl font-bold text-slate-900 mt-1">{{ number_format($stats['total'] ?? 0) }}</p>
+                <p class="text-xs text-slate-400 mt-1">All registered users</p>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11c1.657 0 3-1.343 3-3S17.657 5 16 5s-3 1.343-3 3 1.343 3 3 3zM6 21c0-3.309 2.691-6 6-6s6 2.691 6 6" />
+                </svg>
+            </div>
+        </div>
+        <!-- End: Card Total Users -->
+
+        <!-- Begin: Card Active Users -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-sm text-slate-500 font-medium">Active Users</p>
+                <p class="text-3xl font-bold text-slate-900 mt-1">{{ number_format($stats['active'] ?? 0) }}</p>
+                <p class="text-xs text-slate-400 mt-1">Currently active</p>
+            </div>
+            <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+        <!-- End: Card Active Users -->
+
+        <!-- Begin: Card Administrators -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-sm text-slate-500 font-medium">Administrators</p>
+                <p class="text-3xl font-bold text-slate-900 mt-1">{{ number_format($stats['admins'] ?? 0) }}</p>
+                <p class="text-xs text-slate-400 mt-1">Users with admin role</p>
+            </div>
+            <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 6 2-7L2 9h7z" />
+                </svg>
+            </div>
+        </div>
+        <!-- End: Card Administrators -->
+
+        <!-- Begin: Card Inactive Users -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-center justify-between shadow-sm">
+            <div>
+                <p class="text-sm text-slate-500 font-medium">Inactive Users</p>
+                <p class="text-3xl font-bold text-slate-900 mt-1">{{ number_format($stats['inactive'] ?? 0) }}</p>
+                <p class="text-xs text-slate-400 mt-1">Not active</p>
+            </div>
+            <div class="w-12 h-12 bg-violet-50 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h6m-6 4h10" />
+                </svg>
+            </div>
+        </div>
+        <!-- End: Card Inactive Users -->
+
+    </div>
+    <!-- End: Stats Cards Row -->
+
     <!-- Begin: DataTable Card -->
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
 
