@@ -9,10 +9,12 @@ class VerifyEmailMail extends Mailable
 {
     use SerializesModels;
 
-    public string $url;
+    public $user;
+    public $url;
 
-    public function __construct(public $user, string $url)
+    public function __construct($user, string $url)
     {
+        $this->user = $user;
         $this->url = $url;
     }
 
@@ -21,6 +23,9 @@ class VerifyEmailMail extends Mailable
         return $this->to($this->user->email)
                     ->subject('Verify Email Address')
                     ->view('auth.verify-email')
-                    ->with(['url' => $this->url]);
+                    ->with([
+                        'url' => $this->url,
+                        'user' => $this->user,
+                    ]);
     }
 }
