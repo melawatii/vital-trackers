@@ -200,4 +200,14 @@ class User extends Authenticatable implements MustVerifyEmail
             default => ucfirst($this->role ?? 'User'),
         };
     }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmail());
+    }
 }
