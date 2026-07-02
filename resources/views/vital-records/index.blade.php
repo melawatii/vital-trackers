@@ -18,7 +18,7 @@
             <h1 class="text-2xl font-bold text-slate-900">Vital Records</h1>
             <p class="text-sm text-slate-500 mt-0.5">Monitor and manage all recorded vital sign measurements.</p>
         </div>
-        
+
         <a href="{{ route('vital-records.create') }}"
            class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-xl shadow-sm shadow-blue-200 transition-all duration-150 active:scale-95">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,40 +316,77 @@ $(function () {
         $('#export-csv-btn').attr('href', baseCsv + query);
     }
 
-    // Delete record via AJAX with SweetAlert2 confirmation
+    // Begin: Delete record via AJAX with redesigned confirmation popup.
+    // Built as raw HTML inside Swal so every element is styled inline.
     $(document).on('click', '.btn-delete-record', function () {
-        const url  = $(this).data('url');
-        const name = $(this).closest('tr').find('td:nth-child(3)').text().trim();
+        const url = $(this).data('url');
 
         Swal.fire({
-            title            : 'Delete record?',
-            html             : `<p class="text-sm text-slate-600">You are about to delete this vital record. This cannot be undone.</p>`,
-            icon             : 'warning',
-            showCancelButton : true,
-            confirmButtonText: 'Yes, delete',
-            cancelButtonText : 'Cancel',
-            confirmButtonColor: '#ef4444',
-            customClass      : { popup: 'rounded-2xl text-left' },
-        }).then(result => {
-            if (!result.isConfirmed) return;
+            showConfirmButton: false,
+            showCancelButton : false,
+            showCloseButton  : false,
+            customClass      : { popup: 'rounded-2xl' },
+            width            : 380,
+            padding          : '2rem 1.75rem',
+            html: `
+                <div style="display:flex;flex-direction:column;align-items:center;text-align:center">
+                    <div style="width:60px;height:60px;border-radius:50%;border:2px solid #93c5fd;
+                                display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+                        <svg style="width:26px;height:26px;color:#3b82f6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"
+                                d="M12 9v3.75m0 3.01h.008M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
 
-            // Show progress
-            Swal.fire({ title: 'Deleting…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    <p style="font-size:1.05rem;font-weight:700;color:#0f172a;margin:0 0 8px 0">Delete record?</p>
 
-            $.ajax({
-                url    : url,
-                type   : 'DELETE',
-                data   : { _token: $('meta[name="csrf-token"]').attr('content') },
-                success: res => {
-                    Swal.fire({ icon: 'success', title: 'Deleted!', text: res.message, timer: 2000, showConfirmButton: false });
-                    table.ajax.reload(null, false);
-                },
-                error: () => {
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong. Please try again.' });
-                },
-            });
+                    <p style="font-size:.85rem;color:#64748b;line-height:1.6;margin:0 0 22px 0">
+                        You are about to delete this vital record.<br>
+                        This action cannot be undone.
+                    </p>
+
+                    <div style="display:flex;gap:10px;width:100%">
+                        <button id="swal-confirm-delete"
+                                style="flex:1;background:#3b82f6;color:#fff;font-weight:600;font-size:.85rem;
+                                       border:none;border-radius:10px;padding:10px 0;cursor:pointer">
+                            Yes, delete
+                        </button>
+                        <button id="swal-cancel-delete"
+                                style="flex:1;background:#fff;color:#334155;font-weight:600;font-size:.85rem;
+                                       border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 0;cursor:pointer">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `,
+            didOpen: () => {
+                document.getElementById('swal-confirm-delete').addEventListener('click', () => {
+                    Swal.close();
+                    performDelete(url, table);
+                });
+                document.getElementById('swal-cancel-delete').addEventListener('click', () => {
+                    Swal.close();
+                });
+            },
         });
     });
+
+    function performDelete(url, table) {
+        Swal.fire({ title: 'Deleting…', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        $.ajax({
+            url    : url,
+            type   : 'DELETE',
+            data   : { _token: $('meta[name="csrf-token"]').attr('content') },
+            success: res => {
+                Swal.fire({ icon: 'success', title: 'Deleted!', text: res.message, timer: 2000, showConfirmButton: false });
+                table.ajax.reload(null, false);
+            },
+            error: () => {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong. Please try again.' });
+            },
+        });
+    }
 
     // Render custom pagination buttons
     function renderPagination(settings) {
