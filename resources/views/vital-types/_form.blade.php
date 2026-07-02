@@ -16,7 +16,6 @@
     $maxVal  = old('max_value',        $vitalType->max_value        ?? '');
     $nrMin   = old('normal_range_min', $vitalType->normal_range_min ?? '');
     $nrMax   = old('normal_range_max', $vitalType->normal_range_max ?? '');
-    $sort    = old('sort_order',       $vitalType->sort_order       ?? 1);
     $note    = old('note',             $vitalType->note             ?? '');
     $status  = old('status',           $vitalType->status           ?? 'active');
 
@@ -252,8 +251,8 @@
             <p style="font-size:.75rem;color:#94a3b8;margin-bottom:20px;padding-left:28px">Set status and other preferences.</p>
             <!-- End: Section Title -->
 
-            <!-- Begin: Status + Sort Order + Note Row -->
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+            <!-- Begin: Status + Note Row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
 
                 <!-- Begin: Status Radios -->
                 <div>
@@ -306,17 +305,6 @@
                 </div>
                 <!-- End: Status Radios -->
 
-                <!-- Begin: Field Sort Order -->
-                <div>
-                    <label class="form-label">Sort Order</label>
-                    <input type="number" name="sort_order" min="0"
-                           value="{{ $sort }}"
-                           class="form-input {{ $errors->has('sort_order') ? 'is-error' : '' }}" />
-                    @error('sort_order') <p class="form-error">{{ $message }}</p>
-                    @else <p class="form-hint">Display order in lists (lower numbers appear first).</p> @enderror
-                </div>
-                <!-- End: Field Sort Order -->
-
                 <!-- Begin: Field Note -->
                 <div>
                     <label class="form-label">Note (Optional)</label>
@@ -330,7 +318,7 @@
                 <!-- End: Field Note -->
 
             </div>
-            <!-- End: Status + Sort Order + Note Row -->
+            <!-- End: Status + Note Row -->
 
         </div>
         <!-- End: Section Additional Settings -->
