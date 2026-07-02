@@ -379,8 +379,37 @@ $(function () {
             type   : 'DELETE',
             data   : { _token: $('meta[name="csrf-token"]').attr('content') },
             success: res => {
-                Swal.fire({ icon: 'success', title: 'Deleted!', text: res.message, timer: 2000, showConfirmButton: false });
                 table.ajax.reload(null, false);
+                Swal.close();
+
+                Swal.fire({
+                    showConfirmButton: true,
+                    confirmButtonText: 'Back to List',
+                    customClass: {
+                        popup: 'rounded-2xl',
+                        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white rounded-2xl px-8 py-3 font-semibold',
+                    },
+                    buttonsStyling: false,
+                    width: 420,
+                    padding: '2rem 1.75rem',
+                    html: `
+                        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px">
+                            <div style="width:72px;height:72px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center">
+                                <svg style="width:30px;height:30px;color:#2563eb" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.5 13.5l3 3 6-6" stroke="#2563eb" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="12" cy="12" r="9" stroke="#2563eb" stroke-width="1.75" fill="none" opacity="0.25"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p style="font-size:1.3rem;font-weight:700;color:#0f172a;margin:0">Deleted!</p>
+                                <p style="font-size:.95rem;color:#475569;line-height:1.7;margin:.75rem 0 0 0">
+                                    Record deleted successfully.<br>
+                                    The data has been removed.
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                });
             },
             error: () => {
                 Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong. Please try again.' });
