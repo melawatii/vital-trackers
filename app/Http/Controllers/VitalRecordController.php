@@ -293,7 +293,13 @@ class VitalRecordController extends Controller
         // Fetch types specific to the record's current category to populate the dependent dropdown
         $types      = VitalType::where('category_id', $record->category_id)->active()->orderBy('name')->get();
 
-        return view('vital-records.edit', compact('record', 'categories', 'types'));
+        // Admins can reassign the record to another user when editing.
+        $users = [];
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $users = User::orderBy('name')->get();
+        }
+
+        return view('vital-records.edit', compact('record', 'categories', 'types', 'users'));
     }
 
     /**
@@ -309,8 +315,13 @@ class VitalRecordController extends Controller
         try {
             $record = VitalRecord::findOrFail($id);
 
+            $userId = auth()->user()->role === 'admin' && $request->user_id
+                ? $request->user_id
+                : $record->user_id;
+
             // Update the record with validated data, casting value to float
             $record->update([
+                'user_id'     => $userId,
                 'category_id' => $request->category_id,
                 'type_id'     => $request->type_id,
                 'value'       => (float) $request->value,

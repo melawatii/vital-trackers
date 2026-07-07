@@ -61,8 +61,8 @@
             <option value="">Select user (defaults to yourself)</option>
             @foreach($users as $u)
                 <option value="{{ $u->_id }}"
-                        {{ auth()->id() == $u->_id ? 'selected' : '' }}>
-                    {{ $u->name }} {{ auth()->id() == $u->_id ? '(You)' : '' }}
+                        {{ (old('user_id', $record->user_id ?? '') == $u->_id) ? 'selected' : '' }}>
+                    {{ $u->name }} {{ (old('user_id', $record->user_id ?? '') == $u->_id) ? '(Current)' : '' }}
                 </option>
             @endforeach
         </select>

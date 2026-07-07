@@ -27,8 +27,7 @@ class UpdateVitalRecordRequest extends FormRequest
      */
     public function rules(): array
     {
-        // Note: user_id is intentionally omitted as the owner of a record should not be changed post-creation
-        return [
+        $rules = [
             'type_id'     => ['required', 'string'],
             'category_id' => ['required', 'string'],
             'value'       => ['required', 'numeric'],
@@ -37,6 +36,12 @@ class UpdateVitalRecordRequest extends FormRequest
             'note'        => ['nullable', 'string', 'max:500'],
             'recorded_at' => ['required', 'date'],
         ];
+
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $rules['user_id'] = ['nullable', 'string', 'exists:users,_id'];
+        }
+
+        return $rules;
     }
 
     /**
